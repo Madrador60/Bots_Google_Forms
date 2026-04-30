@@ -3,16 +3,55 @@
 ![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Ready-success)
+[![Download EXE](https://img.shields.io/badge/T%C3%A9l%C3%A9charger-GoogleFormStudio.exe-brightgreen?logo=github)](https://github.com/Madrador60/Bots_Google_Forms/releases/latest/download/GoogleFormStudio.exe)
 
 Google Form Studio est un outil Windows pour analyser un Google Form public, préparer des réponses, simuler un envoi et piloter le tout depuis une interface graphique simple.
 
-Le projet peut aussi s'utiliser depuis le terminal avec la commande `googleform`.
+## Télécharger
+
+### Option recommandée : sans Python
+
+Copier-coller cette ligne dans PowerShell :
+
+```powershell
+irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install_exe.ps1 | iex
+```
+
+Cette commande télécharge l'application, l'installe et la lance automatiquement.
+
+Après installation, l'application est ici :
+
+```text
+%LOCALAPPDATA%\GoogleFormStudio
+```
+
+Vous pouvez ensuite la relancer avec :
+
+```bat
+googleform
+```
+
+### Télécharger l'exe directement
+
+[Télécharger GoogleFormStudio.exe](https://github.com/Madrador60/Bots_Google_Forms/releases/latest/download/GoogleFormStudio.exe)
+
+Si Windows affiche un avertissement SmartScreen, cliquer sur `Informations complémentaires`, puis `Exécuter quand même`.
+
+### Autres options
+
+| Besoin | Commande ou lien |
+| --- | --- |
+| Installer sans Python | `irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install_exe.ps1 \| iex` |
+| Télécharger l'exe | [GoogleFormStudio.exe](https://github.com/Madrador60/Bots_Google_Forms/releases/latest/download/GoogleFormStudio.exe) |
+| Installer la version source avec Python | `irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install.ps1 \| iex` |
+| Mettre à jour après installation | `googleform update` |
+| Désinstaller | `googleform uninstall` |
 
 ## Version .exe Windows
 
-Pour les utilisateurs qui n'ont pas Python, utiliser la version `.exe`.
+La version `.exe` est la plus simple pour partager l'application : l'utilisateur n'a pas besoin d'installer Python.
 
-Installation en une ligne depuis PowerShell :
+Installation en une ligne :
 
 ```powershell
 irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install_exe.ps1 | iex
