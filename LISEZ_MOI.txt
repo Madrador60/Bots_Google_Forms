@@ -24,6 +24,15 @@ Commandes disponibles apres installation:
 - `googleform test` : lance les tests
 - `googleform help` : affiche l'aide
 
+Installation en une ligne
+-------------------------
+Depuis PowerShell:
+
+`irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install.ps1 | iex`
+
+Cette commande telecharge le projet depuis GitHub dans le dossier utilisateur,
+installe les dependances Python, puis ajoute `googleform` au PATH utilisateur.
+
 Commandes manuelles possibles
 -----------------------------
 - Interface graphique depuis ce dossier : `googleform`
@@ -70,6 +79,7 @@ Organisation du dossier
 - `Bot_GoogleForm_Intelligent.py` : moteur principal
 - `Interface_GoogleForm_Studio.py` : interface graphique
 - `googleform.bat` : commande principale utilisable dans le CMD
+- `install.ps1` : installateur PowerShell en une ligne
 - `Installer_Commande_CMD_Windows.bat` : ajoute la commande au PATH utilisateur
 - `Installer_Dependances_Windows.bat` : installe les dependances
 - `Lancer_GoogleForm_Studio.bat` : lance l'application sur Windows
