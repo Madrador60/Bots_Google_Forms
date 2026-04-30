@@ -39,6 +39,7 @@ Autres commandes :
 ```bat
 googleform cli      Lance le mode terminal
 googleform install  Installe ou réinstalle les dépendances
+googleform uninstall Désinstalle Google Form Studio
 googleform test     Lance les tests du projet
 googleform help     Affiche l'aide
 ```
@@ -117,6 +118,22 @@ Pour rendre `googleform` disponible dans tous les terminaux :
 2. Fermer puis rouvrir le CMD ou PowerShell.
 3. Taper `googleform`.
 
+## Désinstallation
+
+Depuis le CMD ou PowerShell :
+
+```bat
+googleform uninstall
+```
+
+Cette commande retire `googleform` du PATH utilisateur et supprime le dossier installé dans `%LOCALAPPDATA%\Bots_Google_Forms`.
+
+Si vous utilisez le dossier téléchargé manuellement, vous pouvez aussi lancer :
+
+```bat
+Desinstaller_GoogleForm_Studio.bat
+```
+
 ## Tests
 
 Depuis le dossier du projet :
@@ -145,8 +162,10 @@ Bots_Google_Forms/
 ├─ Interface_GoogleForm_Studio.py       Interface graphique Tkinter
 ├─ googleform.bat                       Commande principale Windows
 ├─ install.ps1                          Installation PowerShell en une ligne
+├─ uninstall.ps1                        Désinstallation PowerShell
 ├─ Installer_Commande_CMD_Windows.bat   Ajoute googleform au PATH utilisateur
 ├─ Installer_Dependances_Windows.bat    Installe les dépendances Python
+├─ Desinstaller_GoogleForm_Studio.bat   Désinstalle l'application
 ├─ Lancer_GoogleForm_Studio.bat         Lance l'application
 ├─ Verifier_Projet_Windows.bat          Lance les vérifications
 ├─ requirements.txt                     Dépendances Python
