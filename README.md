@@ -19,10 +19,22 @@ irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install.
 L'installateur :
 
 - télécharge la dernière version depuis GitHub;
-- installe le projet dans le dossier utilisateur Windows;
+- installe le projet dans le dossier utilisateur Windows : `%LOCALAPPDATA%\Bots_Google_Forms`;
 - installe les dépendances Python;
 - ajoute la commande `googleform` au PATH utilisateur;
 - lance l'application à la fin de l'installation.
+
+Sur Windows, ce dossier correspond généralement à :
+
+```text
+C:\Users\<nom_utilisateur>\AppData\Local\Bots_Google_Forms
+```
+
+Exemple :
+
+```text
+C:\Users\madra\AppData\Local\Bots_Google_Forms
+```
 
 Si `googleform` n'est pas reconnu après l'installation, fermer puis rouvrir le CMD ou PowerShell.
 
@@ -126,7 +138,17 @@ Depuis le CMD ou PowerShell :
 googleform uninstall
 ```
 
-Cette commande retire `googleform` du PATH utilisateur et supprime le dossier installé dans `%LOCALAPPDATA%\Bots_Google_Forms`.
+Cette commande retire `googleform` du PATH utilisateur et supprime le dossier installé :
+
+```text
+%LOCALAPPDATA%\Bots_Google_Forms
+```
+
+Exemple :
+
+```text
+C:\Users\madra\AppData\Local\Bots_Google_Forms
+```
 
 Si vous utilisez le dossier téléchargé manuellement, vous pouvez aussi lancer :
 
