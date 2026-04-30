@@ -8,6 +8,26 @@ Google Form Studio est un outil Windows pour analyser un Google Form public, pr�
 
 Le projet peut aussi s'utiliser depuis le terminal avec la commande `googleform`.
 
+## Version .exe Windows
+
+Un exécutable Windows peut être généré avec PyInstaller pour utiliser l'application sans installer Python sur le PC final.
+
+Depuis le dossier du projet :
+
+```bat
+googleform build
+```
+
+L'exécutable est créé ici :
+
+```text
+dist\GoogleFormStudio.exe
+```
+
+GitHub construit aussi automatiquement un artefact Windows à chaque push sur `main` via l'action `Build Windows EXE`.
+
+Le fichier `.exe` généré n'est pas envoyé dans le dépôt Git, car il est recréé automatiquement par le script ou par GitHub Actions.
+
 ## Installation rapide
 
 Ouvrir PowerShell, coller cette commande, puis appuyer sur Entrée :
@@ -50,6 +70,7 @@ Autres commandes :
 
 ```bat
 googleform cli      Lance le mode terminal
+googleform build    Crée dist\GoogleFormStudio.exe
 googleform install  Installe ou réinstalle les dépendances
 googleform update   Met à jour Google Form Studio
 googleform uninstall  Désinstalle Google Form Studio
@@ -208,9 +229,12 @@ Bots_Google_Forms/
 │     ├─ Verifier_Projet_Windows.bat
 │     ├─ Desinstaller_GoogleForm_Studio.bat
 │     ├─ Executer_Python_Windows.bat
+│     ├─ Build_Exe_Windows.bat
+│     ├─ build_exe.ps1
 │     ├─ update.ps1
 │     └─ uninstall.ps1
-└─ tests/                               Tests automatiques
+├─ tests/                               Tests automatiques
+└─ .github/workflows/                   Build automatique de l'exe
 ```
 
 ## Dépannage

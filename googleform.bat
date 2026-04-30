@@ -11,6 +11,9 @@ if /i "%~1"=="--cli" goto run_cli
 if /i "%~1"=="cli" goto run_cli
 if /i "%~1"=="--test" goto run_tests
 if /i "%~1"=="test" goto run_tests
+if /i "%~1"=="--build" goto build_exe
+if /i "%~1"=="build" goto build_exe
+if /i "%~1"=="exe" goto build_exe
 if /i "%~1"=="--install" goto install_deps
 if /i "%~1"=="install" goto install_deps
 if /i "%~1"=="--update" goto update_app
@@ -34,6 +37,10 @@ exit /b %errorlevel%
 call "%SCRIPTS_DIR%\Verifier_Projet_Windows.bat"
 exit /b %errorlevel%
 
+:build_exe
+powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPTS_DIR%\build_exe.ps1"
+exit /b %errorlevel%
+
 :install_deps
 call "%SCRIPTS_DIR%\Installer_Dependances_Windows.bat"
 exit /b %errorlevel%
@@ -52,6 +59,7 @@ echo.
 echo Commandes:
 echo   googleform          Lance l'interface graphique
 echo   googleform cli      Lance le mode terminal
+echo   googleform build    Cree dist\GoogleFormStudio.exe
 echo   googleform install  Installe les dependances Python
 echo   googleform update   Met a jour Google Form Studio
 echo   googleform uninstall  Desinstalle Google Form Studio

@@ -9,6 +9,7 @@ env/
 pip-wheel-metadata/
 build/
 dist/
+*.spec
 *.egg-info/
 logs/*
 runtime/*

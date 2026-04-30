@@ -4,6 +4,7 @@ import html
 import json
 import random
 import re
+import sys
 import time
 import unicodedata
 from datetime import datetime, timedelta
@@ -21,7 +22,7 @@ USER_AGENT = (
 )
 REQUEST_TIMEOUT = 20
 APP_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = APP_DIR.parent if APP_DIR.name == "app" else APP_DIR
+PROJECT_DIR = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else APP_DIR.parent
 RUNTIME_DIR = PROJECT_DIR / "runtime"
 LOG_DIR = PROJECT_DIR / "logs"
 LOG_FILE = LOG_DIR / "activity.jsonl"
