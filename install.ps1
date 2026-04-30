@@ -75,10 +75,10 @@ try {
 
     Write-Host ""
     Write-Step "Installation terminee."
-    Write-Host "Tu peux maintenant lancer:"
-    Write-Host "  googleform"
+    Write-Host "Lancement de Google Form Studio..."
     Write-Host ""
-    Write-Host "Si la commande n'est pas reconnue, ferme puis rouvre le CMD/PowerShell."
+    Start-Process -FilePath (Join-Path $installDir "googleform.bat") -WorkingDirectory $installDir
+    Write-Host "Si la commande googleform n'est pas reconnue plus tard, ferme puis rouvre le CMD/PowerShell."
 } finally {
     if (Test-Path -LiteralPath $tempRoot) {
         Remove-Item -LiteralPath $tempRoot -Recurse -Force
