@@ -150,7 +150,6 @@ Bots_Google_Forms/
 ├─ Lancer_GoogleForm_Studio.bat         Lance l'application
 ├─ Verifier_Projet_Windows.bat          Lance les vérifications
 ├─ requirements.txt                     Dépendances Python
-├─ LISEZ_MOI.txt                        Guide local Windows
 ├─ logs/                                Journaux locaux non partagés
 ├─ runtime/                             Données locales temporaires
 └─ tests/                               Tests automatiques
