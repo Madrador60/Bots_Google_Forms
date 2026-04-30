@@ -1,0 +1,68 @@
+GOOGLE FORM STUDIO - WINDOWS
+============================
+
+Lancement rapide
+----------------
+1. Double-clique sur `Installer_Dependances_Windows.bat` une premiere fois.
+2. Double-clique sur `Lancer_GoogleForm_Studio.bat`.
+
+Si Windows demande avec quel programme ouvrir le fichier, choisis
+`Invite de commandes Windows` ou lance le fichier depuis un terminal.
+
+Commandes manuelles possibles
+-----------------------------
+- Interface graphique : `py -3 Interface_GoogleForm_Studio.py`
+- Mode terminal : `py -3 Bot_GoogleForm_Intelligent.py`
+- Tests : `py -3 -m unittest discover -s tests -p "test_*.py"`
+
+Verification
+------------
+- Double-clic sur `Verifier_Projet_Windows.bat`
+
+Prerequis
+---------
+- Windows 10 ou 11
+- Python 3.10 ou plus recent
+- Pendant l'installation de Python, cocher `Add Python to PATH`
+
+Fonctions
+---------
+- Analyse d'un Google Form public a partir de son URL
+- Remplissage manuel
+- Remplissage automatique avec profils intelligents
+- Delais minimum et maximum configurables
+- Simulation sans envoi
+- Envoi unitaire
+- Envoi en serie avec progression et arret propre
+- Journal recent des analyses, simulations et envois
+
+Types pris en charge
+--------------------
+- Reponse courte
+- Paragraphe
+- Choix multiple
+- Liste deroulante
+- Cases a cocher
+- Echelle lineaire
+- Grille a choix unique
+- Grille a cases
+- Date
+- Heure
+
+Organisation du dossier
+-----------------------
+- `Bot_GoogleForm_Intelligent.py` : moteur principal
+- `Interface_GoogleForm_Studio.py` : interface graphique
+- `Installer_Dependances_Windows.bat` : installe les dependances
+- `Lancer_GoogleForm_Studio.bat` : lance l'application sur Windows
+- `Verifier_Projet_Windows.bat` : compile et lance les tests
+- `logs/` : journaux runtime
+- `runtime/` : derniers snapshots et simulations
+- `tests/` : tests automatiques
+
+Notes
+-----
+- Le formulaire doit etre public.
+- Certains comportements Google Forms peuvent rester atypiques selon la structure du formulaire.
+- Le journal runtime est stocke en local dans `logs/activity.jsonl`.
+- Le journal du lanceur Windows est stocke dans `logs/google_form_studio.log`.
