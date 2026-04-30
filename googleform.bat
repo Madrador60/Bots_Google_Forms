@@ -3,6 +3,10 @@ setlocal
 
 cd /d "%~dp0"
 
+set "ROOT_DIR=%~dp0"
+set "SCRIPTS_DIR=%ROOT_DIR%scripts\windows"
+set "APP_DIR=%ROOT_DIR%app"
+
 if /i "%~1"=="--cli" goto run_cli
 if /i "%~1"=="cli" goto run_cli
 if /i "%~1"=="--test" goto run_tests
@@ -16,23 +20,23 @@ if /i "%~1"=="--help" goto help
 if /i "%~1"=="help" goto help
 if /i "%~1"=="/?" goto help
 
-call "%~dp0Lancer_GoogleForm_Studio.bat"
+call "%SCRIPTS_DIR%\Lancer_GoogleForm_Studio.bat"
 exit /b %errorlevel%
 
 :run_cli
-call "%~dp0_Executer_Python_Windows.bat" "Bot_GoogleForm_Intelligent.py"
+call "%SCRIPTS_DIR%\Executer_Python_Windows.bat" "%APP_DIR%\Bot_GoogleForm_Intelligent.py"
 exit /b %errorlevel%
 
 :run_tests
-call "%~dp0Verifier_Projet_Windows.bat"
+call "%SCRIPTS_DIR%\Verifier_Projet_Windows.bat"
 exit /b %errorlevel%
 
 :install_deps
-call "%~dp0Installer_Dependances_Windows.bat"
+call "%SCRIPTS_DIR%\Installer_Dependances_Windows.bat"
 exit /b %errorlevel%
 
 :uninstall_app
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0uninstall.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPTS_DIR%\uninstall.ps1"
 exit /b %errorlevel%
 
 :help

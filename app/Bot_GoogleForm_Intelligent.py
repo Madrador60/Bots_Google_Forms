@@ -20,7 +20,8 @@ USER_AGENT = (
     "Chrome/124.0.0.0 Safari/537.36"
 )
 REQUEST_TIMEOUT = 20
-PROJECT_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = APP_DIR.parent if APP_DIR.name == "app" else APP_DIR
 RUNTIME_DIR = PROJECT_DIR / "runtime"
 LOG_DIR = PROJECT_DIR / "logs"
 LOG_FILE = LOG_DIR / "activity.jsonl"

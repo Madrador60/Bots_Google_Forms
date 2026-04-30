@@ -1,8 +1,8 @@
 @echo off
 setlocal EnableExtensions
 
-set "APP_DIR=%~dp0"
-set "APP_DIR=%APP_DIR:~0,-1%"
+set "APP_DIR=%~dp0..\.."
+for %%I in ("%APP_DIR%") do set "APP_DIR=%%~fI"
 
 echo Installation de la commande googleform pour le CMD...
 echo Dossier: "%APP_DIR%"
@@ -28,6 +28,7 @@ echo.
 echo Autres commandes utiles:
 echo   googleform cli
 echo   googleform install
+echo   googleform uninstall
 echo   googleform test
 pause
 exit /b 0

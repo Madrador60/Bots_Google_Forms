@@ -51,7 +51,7 @@ Autres commandes :
 ```bat
 googleform cli      Lance le mode terminal
 googleform install  Installe ou réinstalle les dépendances
-googleform uninstall Désinstalle Google Form Studio
+googleform uninstall  Désinstalle Google Form Studio
 googleform test     Lance les tests du projet
 googleform help     Affiche l'aide
 ```
@@ -98,7 +98,7 @@ Le dépôt ignore volontairement :
 - les environnements virtuels Python
 - les dossiers de build
 
-Seuls `logs/.gitkeep` et `runtime/.gitkeep` sont conservés pour garder les dossiers dans le dépôt.
+Les dossiers `logs/` et `runtime/` sont créés automatiquement sur chaque PC pendant l'utilisation.
 
 Dans l'application, le bouton `Effacer l'historique local` supprime :
 
@@ -121,12 +121,12 @@ Téléchargement Python :
 
 1. Télécharger ou cloner ce dépôt.
 2. Ouvrir le dossier `Bots_Google_Forms`.
-3. Double-cliquer sur `Installer_Dependances_Windows.bat`.
-4. Double-cliquer sur `Lancer_GoogleForm_Studio.bat`.
+3. Double-cliquer sur `scripts/windows/Installer_Dependances_Windows.bat`.
+4. Double-cliquer sur `scripts/windows/Lancer_GoogleForm_Studio.bat`.
 
 Pour rendre `googleform` disponible dans tous les terminaux :
 
-1. Double-cliquer sur `Installer_Commande_CMD_Windows.bat`.
+1. Double-cliquer sur `scripts/windows/Installer_Commande_CMD_Windows.bat`.
 2. Fermer puis rouvrir le CMD ou PowerShell.
 3. Taper `googleform`.
 
@@ -153,7 +153,7 @@ C:\Users\madra\AppData\Local\Bots_Google_Forms
 Si vous utilisez le dossier téléchargé manuellement, vous pouvez aussi lancer :
 
 ```bat
-Desinstaller_GoogleForm_Studio.bat
+scripts\windows\Desinstaller_GoogleForm_Studio.bat
 ```
 
 ## Tests
@@ -161,7 +161,7 @@ Desinstaller_GoogleForm_Studio.bat
 Depuis le dossier du projet :
 
 ```bat
-Verifier_Projet_Windows.bat
+scripts\windows\Verifier_Projet_Windows.bat
 ```
 
 Ou avec la commande installée :
@@ -180,19 +180,22 @@ py -3 -m unittest discover -s tests -p "test_*.py"
 
 ```text
 Bots_Google_Forms/
-├─ Bot_GoogleForm_Intelligent.py        Moteur principal
-├─ Interface_GoogleForm_Studio.py       Interface graphique Tkinter
-├─ googleform.bat                       Commande principale Windows
 ├─ install.ps1                          Installation PowerShell en une ligne
-├─ uninstall.ps1                        Désinstallation PowerShell
-├─ Installer_Commande_CMD_Windows.bat   Ajoute googleform au PATH utilisateur
-├─ Installer_Dependances_Windows.bat    Installe les dépendances Python
-├─ Desinstaller_GoogleForm_Studio.bat   Désinstalle l'application
-├─ Lancer_GoogleForm_Studio.bat         Lance l'application
-├─ Verifier_Projet_Windows.bat          Lance les vérifications
+├─ googleform.bat                       Commande principale Windows
+├─ README.md                            Documentation GitHub
 ├─ requirements.txt                     Dépendances Python
-├─ logs/                                Journaux locaux non partagés
-├─ runtime/                             Données locales temporaires
+├─ app/
+│  ├─ Bot_GoogleForm_Intelligent.py      Moteur principal
+│  └─ Interface_GoogleForm_Studio.py     Interface graphique Tkinter
+├─ scripts/
+│  └─ windows/
+│     ├─ Installer_Commande_CMD_Windows.bat
+│     ├─ Installer_Dependances_Windows.bat
+│     ├─ Lancer_GoogleForm_Studio.bat
+│     ├─ Verifier_Projet_Windows.bat
+│     ├─ Desinstaller_GoogleForm_Studio.bat
+│     ├─ Executer_Python_Windows.bat
+│     └─ uninstall.ps1
 └─ tests/                               Tests automatiques
 ```
 
@@ -207,7 +210,7 @@ Python n'est pas reconnu :
 `googleform` n'est pas reconnu :
 
 - fermer puis rouvrir le CMD ou PowerShell;
-- relancer `Installer_Commande_CMD_Windows.bat`.
+- relancer `scripts/windows/Installer_Commande_CMD_Windows.bat`.
 
 L'interface ne s'ouvre pas :
 
