@@ -4,7 +4,7 @@ setlocal
 cd /d "%~dp0"
 
 set "ROOT_DIR=%~dp0"
-set "SCRIPTS_DIR=%ROOT_DIR%scripts\windows"
+set "SCRIPTS_DIR=%ROOT_DIR%scripts\win"
 set "APP_DIR=%ROOT_DIR%app"
 
 if /i "%~1"=="--cli" goto run_cli

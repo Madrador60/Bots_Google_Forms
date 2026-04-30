@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$installerUrl = "https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install.ps1"
+$installerUrl = "https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/scripts/win/install_source.ps1"
 $tempInstaller = Join-Path $env:TEMP ("googleform_update_" + [Guid]::NewGuid().ToString("N") + ".ps1")
 
 function Write-Step($message) {

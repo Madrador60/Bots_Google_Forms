@@ -37,7 +37,7 @@ Cette option est utile pour modifier le code, lancer les tests ou reconstruire l
 Installation en une ligne :
 
 ```powershell
-irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/scripts/win/install_source.ps1 | iex
 ```
 
 Prérequis :
@@ -157,7 +157,7 @@ googleform update
 Depuis le dossier du projet :
 
 ```bat
-scripts\windows\Verifier_Projet_Windows.bat
+scripts\win\Verifier_Projet_Windows.bat
 ```
 
 Ou avec la commande installée :
@@ -171,9 +171,8 @@ googleform test
 ```text
 Bots_Google_Forms/
 ├─ app/                 Code Python de l'application
-├─ scripts/windows/     Scripts Windows
+├─ scripts/win/         Scripts Windows
 ├─ tests/               Tests automatiques
-├─ install.ps1          Installation version Python
 ├─ install_exe.ps1      Installation version .exe
 ├─ googleform.bat       Commande principale
 ├─ requirements.txt     Dépendances Python
