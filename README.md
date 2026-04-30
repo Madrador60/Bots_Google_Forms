@@ -10,9 +10,29 @@ Le projet peut aussi s'utiliser depuis le terminal avec la commande `googleform`
 
 ## Version .exe Windows
 
-Un exécutable Windows peut être généré avec PyInstaller pour utiliser l'application sans installer Python sur le PC final.
+Pour les utilisateurs qui n'ont pas Python, utiliser la version `.exe`.
 
-Depuis le dossier du projet :
+Installation en une ligne depuis PowerShell :
+
+```powershell
+irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install_exe.ps1 | iex
+```
+
+Cette commande télécharge `GoogleFormStudio.exe` depuis la dernière Release GitHub, l'installe dans :
+
+```text
+%LOCALAPPDATA%\GoogleFormStudio
+```
+
+puis ajoute la commande `googleform` au PATH utilisateur et lance l'application.
+
+Téléchargement direct de l'exe :
+
+```text
+https://github.com/Madrador60/Bots_Google_Forms/releases/latest/download/GoogleFormStudio.exe
+```
+
+Pour générer l'exe depuis le code source :
 
 ```bat
 googleform build
@@ -24,7 +44,7 @@ L'exécutable est créé ici :
 dist\GoogleFormStudio.exe
 ```
 
-GitHub construit aussi automatiquement un artefact Windows à chaque push sur `main` via l'action `Build Windows EXE`.
+GitHub construit aussi automatiquement `GoogleFormStudio.exe` à chaque push sur `main` via l'action `Build Windows EXE`.
 
 Le fichier `.exe` généré n'est pas envoyé dans le dépôt Git, car il est recréé automatiquement par le script ou par GitHub Actions.
 
@@ -57,6 +77,8 @@ C:\Users\madra\AppData\Local\Bots_Google_Forms
 ```
 
 Si `googleform` n'est pas reconnu après l'installation, fermer puis rouvrir le CMD ou PowerShell.
+
+Note : cette installation rapide utilise Python. Pour un PC sans Python, utiliser la section `Version .exe Windows`.
 
 ## Utilisation
 
@@ -215,6 +237,7 @@ py -3 -m unittest discover -s tests -p "test_*.py"
 ```text
 Bots_Google_Forms/
 ├─ install.ps1                          Installation PowerShell en une ligne
+├─ install_exe.ps1                      Installation de la version .exe
 ├─ googleform.bat                       Commande principale Windows
 ├─ README.md                            Documentation GitHub
 ├─ requirements.txt                     Dépendances Python
