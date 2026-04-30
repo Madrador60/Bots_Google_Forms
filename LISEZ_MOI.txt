@@ -1,68 +1,88 @@
-GOOGLE FORM STUDIO - WINDOWS
-============================
+GOOGLE FORM STUDIO - GUIDE WINDOWS
+==================================
 
-Lancement rapide
-----------------
-1. Double-clique sur `Installer_Dependances_Windows.bat` une premiere fois.
-2. Double-clique sur `Lancer_GoogleForm_Studio.bat`.
+Google Form Studio est un outil Windows pour analyser un Google Form public,
+preparer des reponses, simuler un envoi et utiliser une interface graphique
+simple depuis un PC Windows.
 
-Si Windows demande avec quel programme ouvrir le fichier, choisis
-`Invite de commandes Windows` ou lance le fichier depuis un terminal.
 
-Utilisation depuis le CMD
-------------------------
-Pour pouvoir lancer l'application depuis n'importe quel CMD:
+INSTALLATION RAPIDE
+-------------------
+
+Ouvre PowerShell, colle cette ligne, puis appuie sur Entree :
+
+irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install.ps1 | iex
+
+Cette commande installe le projet dans ton dossier utilisateur, installe les
+dependances Python, ajoute la commande `googleform`, puis lance l'application.
+
+Si `googleform` n'est pas reconnu plus tard, ferme puis rouvre le CMD ou
+PowerShell.
+
+
+LANCER L'APPLICATION
+--------------------
+
+Apres installation, ouvre un CMD ou PowerShell et tape :
+
+googleform
+
+Commandes disponibles :
+
+googleform          Lance l'interface graphique
+googleform cli      Lance le mode terminal
+googleform install  Installe ou reinstalle les dependances
+googleform test     Lance les tests du projet
+googleform help     Affiche l'aide
+
+
+INSTALLATION MANUELLE
+---------------------
+
+Si tu as deja telecharge le dossier du projet :
+
+1. Ouvre le dossier `Bots_Google_Forms`.
+2. Double-clique sur `Installer_Dependances_Windows.bat`.
+3. Double-clique sur `Lancer_GoogleForm_Studio.bat`.
+
+Pour pouvoir taper `googleform` depuis n'importe quel CMD :
 
 1. Double-clique sur `Installer_Commande_CMD_Windows.bat`.
-2. Ferme puis rouvre le CMD.
+2. Ferme puis rouvre le CMD ou PowerShell.
 3. Tape `googleform`.
 
-Commandes disponibles apres installation:
-- `googleform` : lance l'interface graphique
-- `googleform cli` : lance le mode terminal
-- `googleform install` : installe les dependances Python
-- `googleform test` : lance les tests
-- `googleform help` : affiche l'aide
 
-Installation en une ligne
--------------------------
-Depuis PowerShell:
-
-`irm https://raw.githubusercontent.com/Madrador60/Bots_Google_Forms/main/install.ps1 | iex`
-
-Cette commande telecharge le projet depuis GitHub dans le dossier utilisateur,
-installe les dependances Python, puis ajoute `googleform` au PATH utilisateur.
-
-Commandes manuelles possibles
------------------------------
-- Interface graphique depuis ce dossier : `googleform`
-- Interface graphique : `py -3 Interface_GoogleForm_Studio.py`
-- Mode terminal : `py -3 Bot_GoogleForm_Intelligent.py`
-- Tests : `py -3 -m unittest discover -s tests -p "test_*.py"`
-
-Verification
-------------
-- Double-clic sur `Verifier_Projet_Windows.bat`
-
-Prerequis
+PREREQUIS
 ---------
-- Windows 10 ou 11
+
+- Windows 10 ou Windows 11
 - Python 3.10 ou plus recent
 - Pendant l'installation de Python, cocher `Add Python to PATH`
 
-Fonctions
----------
-- Analyse d'un Google Form public a partir de son URL
+Lien officiel Python :
+
+https://www.python.org/downloads/windows/
+
+
+FONCTIONS PRINCIPALES
+---------------------
+
+- Analyse d'un Google Form public depuis son URL
+- Affichage des questions dans une interface graphique
 - Remplissage manuel
-- Remplissage automatique avec profils intelligents
-- Delais minimum et maximum configurables
+- Generation automatique de reponses
+- Profils automatiques : prudent, equilibre, varie
 - Simulation sans envoi
 - Envoi unitaire
-- Envoi en serie avec progression et arret propre
-- Journal recent des analyses, simulations et envois
+- Envoi en serie avec progression
+- Pause, reprise et arret propre d'une serie
+- Journal recent local
+- Suppression de l'historique local depuis l'interface
 
-Types pris en charge
---------------------
+
+TYPES DE QUESTIONS PRIS EN CHARGE
+---------------------------------
+
 - Reponse courte
 - Paragraphe
 - Choix multiple
@@ -74,29 +94,74 @@ Types pris en charge
 - Date
 - Heure
 
-Organisation du dossier
+
+CONFIDENTIALITE
+---------------
+
+Chaque PC garde son propre historique local.
+
+Les fichiers dans `logs/` et `runtime/` ne sont pas envoyes sur GitHub. Ils
+sont crees uniquement sur la machine qui utilise l'application.
+
+Le bouton `Effacer l'historique local` supprime :
+
+- le journal recent;
+- le journal du lanceur Windows;
+- le dernier formulaire analyse;
+- la derniere simulation sauvegardee.
+
+
+VERIFICATION
+------------
+
+Pour verifier que le projet fonctionne :
+
+Verifier_Projet_Windows.bat
+
+Ou, si la commande `googleform` est installee :
+
+googleform test
+
+
+ORGANISATION DU DOSSIER
 -----------------------
-- `Bot_GoogleForm_Intelligent.py` : moteur principal
-- `Interface_GoogleForm_Studio.py` : interface graphique
-- `googleform.bat` : commande principale utilisable dans le CMD
-- `install.ps1` : installateur PowerShell en une ligne
-- `Installer_Commande_CMD_Windows.bat` : ajoute la commande au PATH utilisateur
-- `Installer_Dependances_Windows.bat` : installe les dependances
-- `Lancer_GoogleForm_Studio.bat` : lance l'application sur Windows
-- `Verifier_Projet_Windows.bat` : compile et lance les tests
-- `logs/` : journaux runtime
-- `runtime/` : derniers snapshots et simulations
-- `tests/` : tests automatiques
 
-Confidentialite locale
-----------------------
-- Chaque PC garde son propre historique local.
-- Les fichiers dans `logs/` et `runtime/` ne sont pas envoyes sur GitHub.
-- Le bouton `Effacer l'historique local` supprime le journal recent, le journal du lanceur Windows, le dernier formulaire analyse et la derniere simulation.
+Bot_GoogleForm_Intelligent.py        Moteur principal
+Interface_GoogleForm_Studio.py       Interface graphique
+googleform.bat                       Commande principale Windows
+install.ps1                          Installation en une ligne
+Installer_Commande_CMD_Windows.bat   Ajoute `googleform` au PATH utilisateur
+Installer_Dependances_Windows.bat    Installe les dependances Python
+Lancer_GoogleForm_Studio.bat         Lance l'application
+Verifier_Projet_Windows.bat          Lance les verifications
+requirements.txt                     Dependances Python
+logs/                                Journaux locaux
+runtime/                             Donnees locales temporaires
+tests/                               Tests automatiques
 
-Notes
------
-- Le formulaire doit etre public.
-- Certains comportements Google Forms peuvent rester atypiques selon la structure du formulaire.
-- Le journal runtime est stocke en local dans `logs/activity.jsonl`.
-- Le journal du lanceur Windows est stocke dans `logs/google_form_studio.log`.
+
+DEPANNAGE
+---------
+
+Python n'est pas reconnu :
+- Installe Python depuis le site officiel.
+- Relance l'installation en cochant `Add Python to PATH`.
+- Ferme puis rouvre le CMD ou PowerShell.
+
+La commande `googleform` n'est pas reconnue :
+- Ferme puis rouvre le CMD ou PowerShell.
+- Relance `Installer_Commande_CMD_Windows.bat`.
+
+L'interface ne s'ouvre pas :
+- Lance `googleform test`.
+- Regarde le fichier `logs/google_form_studio.log`.
+
+
+NOTES IMPORTANTES
+-----------------
+
+- Le formulaire Google doit etre public.
+- Certains formulaires peuvent avoir une structure atypique.
+- Google Forms peut changer son fonctionnement avec le temps.
+- Utilise l'outil uniquement sur des formulaires que tu es autorise a tester
+  ou administrer.
