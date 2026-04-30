@@ -51,6 +51,7 @@ Autres commandes :
 ```bat
 googleform cli      Lance le mode terminal
 googleform install  Installe ou réinstalle les dépendances
+googleform update   Met à jour Google Form Studio
 googleform uninstall  Désinstalle Google Form Studio
 googleform test     Lance les tests du projet
 googleform help     Affiche l'aide
@@ -130,6 +131,18 @@ Pour rendre `googleform` disponible dans tous les terminaux :
 2. Fermer puis rouvrir le CMD ou PowerShell.
 3. Taper `googleform`.
 
+## Mise à jour
+
+Depuis le CMD ou PowerShell :
+
+```bat
+googleform update
+```
+
+Cette commande retélécharge la dernière version depuis GitHub et met à jour le dossier installé dans `%LOCALAPPDATA%\Bots_Google_Forms`.
+
+Les journaux locaux et les fichiers runtime de l'utilisateur ne sont pas envoyés sur GitHub.
+
 ## Désinstallation
 
 Depuis le CMD ou PowerShell :
@@ -195,6 +208,7 @@ Bots_Google_Forms/
 │     ├─ Verifier_Projet_Windows.bat
 │     ├─ Desinstaller_GoogleForm_Studio.bat
 │     ├─ Executer_Python_Windows.bat
+│     ├─ update.ps1
 │     └─ uninstall.ps1
 └─ tests/                               Tests automatiques
 ```

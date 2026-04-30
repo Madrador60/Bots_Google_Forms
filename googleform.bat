@@ -13,6 +13,9 @@ if /i "%~1"=="--test" goto run_tests
 if /i "%~1"=="test" goto run_tests
 if /i "%~1"=="--install" goto install_deps
 if /i "%~1"=="install" goto install_deps
+if /i "%~1"=="--update" goto update_app
+if /i "%~1"=="update" goto update_app
+if /i "%~1"=="maj" goto update_app
 if /i "%~1"=="--uninstall" goto uninstall_app
 if /i "%~1"=="uninstall" goto uninstall_app
 if /i "%~1"=="desinstaller" goto uninstall_app
@@ -35,6 +38,10 @@ exit /b %errorlevel%
 call "%SCRIPTS_DIR%\Installer_Dependances_Windows.bat"
 exit /b %errorlevel%
 
+:update_app
+powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPTS_DIR%\update.ps1"
+exit /b %errorlevel%
+
 :uninstall_app
 powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPTS_DIR%\uninstall.ps1"
 exit /b %errorlevel%
@@ -46,6 +53,7 @@ echo Commandes:
 echo   googleform          Lance l'interface graphique
 echo   googleform cli      Lance le mode terminal
 echo   googleform install  Installe les dependances Python
+echo   googleform update   Met a jour Google Form Studio
 echo   googleform uninstall  Desinstalle Google Form Studio
 echo   googleform test     Lance les tests
 echo   googleform help     Affiche cette aide

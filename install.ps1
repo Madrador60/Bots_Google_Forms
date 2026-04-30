@@ -1,3 +1,7 @@
+param(
+    [switch]$NoLaunch
+)
+
 $ErrorActionPreference = "Stop"
 
 $repoZipUrl = "https://github.com/Madrador60/Bots_Google_Forms/archive/refs/heads/main.zip"
@@ -42,6 +46,26 @@ try {
         throw "Archive GitHub invalide: dossier source introuvable."
     }
 
+    $obsoleteFiles = @(
+        "Bot_GoogleForm_Intelligent.py",
+        "Interface_GoogleForm_Studio.py",
+        "Desinstaller_GoogleForm_Studio.bat",
+        "Installer_Commande_CMD_Windows.bat",
+        "Installer_Dependances_Windows.bat",
+        "Lancer_GoogleForm_Studio.bat",
+        "Verifier_Projet_Windows.bat",
+        "_Executer_Python_Windows.bat",
+        "uninstall.ps1",
+        "LISEZ_MOI.txt"
+    )
+
+    foreach ($fileName in $obsoleteFiles) {
+        $path = Join-Path $installDir $fileName
+        if (Test-Path -LiteralPath $path) {
+            Remove-Item -LiteralPath $path -Force
+        }
+    }
+
     Write-Step "Copie des fichiers..."
     Copy-Item -Path (Join-Path $sourceDir.FullName "*") -Destination $installDir -Recurse -Force
 
@@ -75,9 +99,11 @@ try {
 
     Write-Host ""
     Write-Step "Installation terminee."
-    Write-Host "Lancement de Google Form Studio..."
-    Write-Host ""
-    Start-Process -FilePath (Join-Path $installDir "googleform.bat") -WorkingDirectory $installDir
+    if (-not $NoLaunch) {
+        Write-Host "Lancement de Google Form Studio..."
+        Write-Host ""
+        Start-Process -FilePath (Join-Path $installDir "googleform.bat") -WorkingDirectory $installDir
+    }
     Write-Host "Si la commande googleform n'est pas reconnue plus tard, ferme puis rouvre le CMD/PowerShell."
 } finally {
     if (Test-Path -LiteralPath $tempRoot) {
