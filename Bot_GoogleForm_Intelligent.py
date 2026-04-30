@@ -152,6 +152,22 @@ def read_recent_logs(limit: int = 25) -> list[dict[str, Any]]:
     return list(reversed(entries))
 
 
+def clear_local_history() -> int:
+    ensure_runtime_dirs()
+    deleted_count = 0
+    targets = [
+        LOG_FILE,
+        LAST_FORM_FILE,
+        LAST_SIMULATION_FILE,
+        LOG_DIR / "google_form_studio.log",
+    ]
+    for path in targets:
+        if path.exists() and path.is_file():
+            path.unlink()
+            deleted_count += 1
+    return deleted_count
+
+
 def format_log_entry(entry: dict[str, Any]) -> str:
     timestamp = entry.get("timestamp", "")
     clock = timestamp[11:19] if len(timestamp) >= 19 else timestamp

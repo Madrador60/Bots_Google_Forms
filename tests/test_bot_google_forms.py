@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import Bot_GoogleForm_Intelligent as core
@@ -121,6 +123,36 @@ class BotGoogleFormsTests(unittest.TestCase):
         self.assertEqual(simulation["filled_count"], 1)
         self.assertEqual(simulation["payload_count"], 2)
         self.assertIn("Nom", simulation["summary_text"])
+
+    def test_clear_local_history_removes_runtime_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            log_dir = temp_path / "logs"
+            runtime_dir = temp_path / "runtime"
+            log_file = log_dir / "activity.jsonl"
+            last_form_file = runtime_dir / "last_form.json"
+            last_simulation_file = runtime_dir / "last_simulation.json"
+            launcher_log = log_dir / "google_form_studio.log"
+
+            with (
+                patch.object(core, "LOG_DIR", log_dir),
+                patch.object(core, "RUNTIME_DIR", runtime_dir),
+                patch.object(core, "LOG_FILE", log_file),
+                patch.object(core, "LAST_FORM_FILE", last_form_file),
+                patch.object(core, "LAST_SIMULATION_FILE", last_simulation_file),
+            ):
+                core.append_log("test", "message")
+                core.save_json_snapshot(core.LAST_FORM_FILE, {"title": "test"})
+                core.save_json_snapshot(core.LAST_SIMULATION_FILE, {"label": "test"})
+                launcher_log.write_text("log", encoding="utf-8")
+
+                deleted_count = core.clear_local_history()
+
+                self.assertEqual(deleted_count, 4)
+                self.assertFalse(core.LOG_FILE.exists())
+                self.assertFalse(core.LAST_FORM_FILE.exists())
+                self.assertFalse(core.LAST_SIMULATION_FILE.exists())
+                self.assertFalse(launcher_log.exists())
 
     def test_run_random_submissions_can_stop_cleanly(self) -> None:
         form_data = {

@@ -137,11 +137,25 @@ Le dépôt ignore volontairement:
 
 - les fichiers `__pycache__/`;
 - les fichiers `.pyc`;
-- `logs/activity.jsonl`;
-- `runtime/last_form.json`;
-- `runtime/last_simulation.json`.
+- tous les fichiers dans `logs/`, sauf `logs/.gitkeep`;
+- tous les fichiers dans `runtime/`, sauf `runtime/.gitkeep`;
+- les environnements virtuels Python;
+- les dossiers de build Python.
 
 Ces fichiers sont générés automatiquement pendant l'utilisation.
+
+## Confidentialité locale
+
+Chaque machine garde son propre historique local. Les journaux, les derniers formulaires analysés et les dernières simulations restent dans le dossier installé sur le PC de l'utilisateur.
+
+Rien de cet historique n'est envoyé sur GitHub.
+
+Dans l'interface, le bouton `Effacer l'historique local` supprime:
+
+- le journal récent;
+- le journal du lanceur Windows;
+- le dernier formulaire analysé;
+- la dernière simulation sauvegardée.
 
 ## Notes importantes
 

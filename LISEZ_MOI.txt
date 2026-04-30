@@ -88,6 +88,12 @@ Organisation du dossier
 - `runtime/` : derniers snapshots et simulations
 - `tests/` : tests automatiques
 
+Confidentialite locale
+----------------------
+- Chaque PC garde son propre historique local.
+- Les fichiers dans `logs/` et `runtime/` ne sont pas envoyes sur GitHub.
+- Le bouton `Effacer l'historique local` supprime le journal recent, le journal du lanceur Windows, le dernier formulaire analyse et la derniere simulation.
+
 Notes
 -----
 - Le formulaire doit etre public.

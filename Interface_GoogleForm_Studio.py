@@ -1032,6 +1032,15 @@ class GoogleFormStudioApp:
         )
         self.refresh_logs_button.pack(fill="x", pady=(0, 10))
 
+        self.clear_history_button = self._make_button(
+            footer_box,
+            text="Effacer l'historique local",
+            bg=COLORS["warn_soft"],
+            fg=COLORS["warn"],
+            command=self.clear_local_history,
+        )
+        self.clear_history_button.pack(fill="x", pady=(0, 10))
+
         self.reset_button = self._make_button(
             footer_box,
             text="Recommencer",
@@ -1302,6 +1311,21 @@ class GoogleFormStudioApp:
             self._write_logs("Aucune activite recente.")
             return
         self._write_logs("\n".join(core.format_log_entry(entry) for entry in entries))
+
+    def clear_local_history(self) -> None:
+        if not messagebox.askyesno(
+            "Effacer l'historique local",
+            "Supprimer le journal local et les derniers snapshots de ce PC ?",
+        ):
+            return
+
+        deleted_count = core.clear_local_history()
+        self.refresh_logs()
+        self.set_status("Historique local efface.", "ok")
+        messagebox.showinfo(
+            "Historique local efface",
+            f"{deleted_count} fichier(s) local(aux) supprime(s).",
+        )
 
     def show_report_dialog(self, title: str, content: str) -> None:
         dialog = tk.Toplevel(self.root)
