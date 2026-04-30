@@ -9,8 +9,24 @@ Lancement rapide
 Si Windows demande avec quel programme ouvrir le fichier, choisis
 `Invite de commandes Windows` ou lance le fichier depuis un terminal.
 
+Utilisation depuis le CMD
+------------------------
+Pour pouvoir lancer l'application depuis n'importe quel CMD:
+
+1. Double-clique sur `Installer_Commande_CMD_Windows.bat`.
+2. Ferme puis rouvre le CMD.
+3. Tape `googleform`.
+
+Commandes disponibles apres installation:
+- `googleform` : lance l'interface graphique
+- `googleform cli` : lance le mode terminal
+- `googleform install` : installe les dependances Python
+- `googleform test` : lance les tests
+- `googleform help` : affiche l'aide
+
 Commandes manuelles possibles
 -----------------------------
+- Interface graphique depuis ce dossier : `googleform`
 - Interface graphique : `py -3 Interface_GoogleForm_Studio.py`
 - Mode terminal : `py -3 Bot_GoogleForm_Intelligent.py`
 - Tests : `py -3 -m unittest discover -s tests -p "test_*.py"`
@@ -53,6 +69,8 @@ Organisation du dossier
 -----------------------
 - `Bot_GoogleForm_Intelligent.py` : moteur principal
 - `Interface_GoogleForm_Studio.py` : interface graphique
+- `googleform.bat` : commande principale utilisable dans le CMD
+- `Installer_Commande_CMD_Windows.bat` : ajoute la commande au PATH utilisateur
 - `Installer_Dependances_Windows.bat` : installe les dependances
 - `Lancer_GoogleForm_Studio.bat` : lance l'application sur Windows
 - `Verifier_Projet_Windows.bat` : compile et lance les tests
