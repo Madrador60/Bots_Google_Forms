@@ -715,6 +715,9 @@ class GoogleFormStudioApp:
         self.meta_var = tk.StringVar(value="Aucun formulaire charge.")
         self.stats_var = tk.StringVar(value="0 question")
         self.status_var = tk.StringVar(value="Pret pour analyser un formulaire public.")
+        self.footer_status_var = tk.StringVar(value="Pret.")
+        self.form_title_var = tk.StringVar(value="-")
+        self.form_url_var = tk.StringVar(value="-")
         self.progress_var = tk.StringVar(value="Aucune serie en cours.")
         self.total_questions_var = tk.StringVar(value="0")
         self.supported_questions_var = tk.StringVar(value="0")
@@ -794,6 +797,32 @@ class GoogleFormStudioApp:
         )
         summary_panel.pack(side="right", fill="y")
         summary_panel.pack_propagate(False)
+
+        status_bar = tk.Frame(
+            self.root,
+            bg=COLORS["panel"],
+            highlightbackground=COLORS["line"],
+            highlightthickness=1,
+            padx=12,
+            pady=8,
+        )
+        status_bar.pack(fill="x", padx=8, pady=(0, 8))
+        tk.Label(
+            status_bar,
+            textvariable=self.footer_status_var,
+            bg=COLORS["panel"],
+            fg=COLORS["ink"],
+            font=("Segoe UI", 10),
+            anchor="w",
+        ).pack(side="left", fill="x", expand=True)
+        tk.Label(
+            status_bar,
+            text=APP_RELEASE,
+            bg=COLORS["panel"],
+            fg=COLORS["ink"],
+            font=("Segoe UI", 10, "bold"),
+            anchor="e",
+        ).pack(side="right")
 
         brand = tk.Frame(controls_content, bg=COLORS["panel"])
         brand.pack(fill="x", pady=(0, 22))
@@ -1038,29 +1067,35 @@ class GoogleFormStudioApp:
         footer_box = tk.Frame(controls_content, bg=COLORS["panel"])
         footer_box.pack(fill="x", pady=(16, 0))
 
+        footer_grid = tk.Frame(footer_box, bg=COLORS["panel"])
+        footer_grid.pack(fill="x")
+        footer_grid.grid_columnconfigure(0, weight=1)
+        footer_grid.grid_columnconfigure(1, weight=1)
+        footer_grid.grid_columnconfigure(2, weight=1)
+
         self.refresh_logs_button = self._make_button(
-            footer_box,
-            text="Actualiser l'historique",
+            footer_grid,
+            text="Actualiser",
             bg=COLORS["panel_alt"],
             command=self.refresh_logs,
         )
-        self.refresh_logs_button.pack(fill="x", pady=(0, 10))
+        self.refresh_logs_button.grid(row=0, column=0, sticky="nsew", padx=(0, 6))
 
         self.clear_history_button = self._make_button(
-            footer_box,
-            text="Effacer l'historique local",
+            footer_grid,
+            text="Effacer",
             bg=COLORS["panel_alt"],
             command=self.clear_local_history,
         )
-        self.clear_history_button.pack(fill="x", pady=(0, 10))
+        self.clear_history_button.grid(row=0, column=1, sticky="nsew", padx=(0, 6))
 
         self.reset_button = self._make_button(
-            footer_box,
+            footer_grid,
             text="Reinitialiser",
             bg=COLORS["panel_alt"],
             command=self.reset_form,
         )
-        self.reset_button.pack(fill="x", pady=(0, 10))
+        self.reset_button.grid(row=0, column=2, sticky="nsew")
 
         self.controlled_widgets.extend(
             [
@@ -1122,13 +1157,16 @@ class GoogleFormStudioApp:
         self.scroll_zone = ScrollZone(canvas_panel, bg=COLORS["panel"], content_bg=COLORS["panel"])
         self.scroll_zone.pack(fill="both", expand=True)
 
-        self._panel_heading(summary_panel, "Recapitulatif", "Etat du formulaire et des reponses")
-        metrics = tk.Frame(summary_panel, bg=COLORS["panel"])
-        metrics.pack(fill="x", pady=(0, 14))
-        self._metric_card(metrics, "Questions", self.total_questions_var, 0, 0)
-        self._metric_card(metrics, "Exploitables", self.supported_questions_var, 0, 1)
-        self._metric_card(metrics, "Remplies", self.filled_answers_var, 1, 0)
-        self._metric_card(metrics, "Pret", self.ready_status_var, 1, 1)
+        self._panel_heading(summary_panel, "Recapitulatif", "")
+        identity_box = self._info_box(summary_panel)
+        self._summary_row(identity_box, "Titre du formulaire", self.form_title_var, tone="muted")
+        self._summary_row(identity_box, "URL", self.form_url_var, tone="muted")
+
+        stats_box = self._info_box(summary_panel)
+        self._summary_row(stats_box, "Questions detectees", self.total_questions_var)
+        self._summary_row(stats_box, "Questions exploitables", self.supported_questions_var)
+        self._summary_row(stats_box, "Reponses remplies", self.filled_answers_var)
+        self._summary_row(stats_box, "Pretes a envoyer", self.ready_status_var)
 
         self.summary_text = tk.Text(
             summary_panel,
@@ -1140,11 +1178,11 @@ class GoogleFormStudioApp:
             padx=12,
             pady=12,
             state="disabled",
-            height=14,
+            height=9,
         )
         self.summary_text.pack(fill="both", expand=True, pady=(0, 14))
 
-        self._panel_heading(summary_panel, "Activite locale", "Historique uniquement sur ce PC")
+        self._panel_heading(summary_panel, "Activite locale recente", "")
 
         self.log_text = tk.Text(
             summary_panel,
@@ -1158,7 +1196,15 @@ class GoogleFormStudioApp:
             state="disabled",
             height=12,
         )
-        self.log_text.pack(fill="both", expand=False)
+        self.log_text.pack(fill="both", expand=False, pady=(0, 10))
+
+        self.full_history_button = self._make_button(
+            summary_panel,
+            text="Voir tout l'historique",
+            bg=COLORS["panel_alt"],
+            command=self.show_full_history,
+        )
+        self.full_history_button.pack(fill="x")
 
     def _configure_progress_style(self) -> None:
         style = ttk.Style()
@@ -1194,42 +1240,52 @@ class GoogleFormStudioApp:
             font=("Segoe UI", 15, "bold"),
             anchor="w",
         ).pack(fill="x")
-        tk.Label(
-            parent,
-            text=subtitle,
-            bg=COLORS["panel"],
-            fg=COLORS["muted"],
-            font=("Segoe UI", 10),
-            anchor="w",
-        ).pack(fill="x", pady=(2, 12))
+        if subtitle:
+            tk.Label(
+                parent,
+                text=subtitle,
+                bg=COLORS["panel"],
+                fg=COLORS["muted"],
+                font=("Segoe UI", 10),
+                anchor="w",
+            ).pack(fill="x", pady=(2, 12))
+        else:
+            tk.Frame(parent, bg=COLORS["panel"], height=10).pack(fill="x")
 
-    def _metric_card(self, parent: tk.Misc, label: str, variable: tk.StringVar, row: int, column: int) -> None:
-        card = tk.Frame(
+    def _info_box(self, parent: tk.Misc) -> tk.Frame:
+        box = tk.Frame(
             parent,
-            bg=COLORS["panel_alt"],
+            bg=COLORS["panel_card"],
             highlightbackground=COLORS["line"],
             highlightthickness=1,
             padx=12,
             pady=10,
         )
-        card.grid(row=row, column=column, sticky="nsew", padx=(0 if column == 0 else 8, 0), pady=(0, 8))
-        parent.grid_columnconfigure(column, weight=1)
+        box.pack(fill="x", pady=(0, 12))
+        return box
+
+    def _summary_row(self, parent: tk.Misc, label: str, variable: tk.StringVar, *, tone: str = "normal") -> None:
+        row = tk.Frame(parent, bg=COLORS["panel_card"])
+        row.pack(fill="x", pady=5)
+        label_fg = COLORS["muted"] if tone == "muted" else COLORS["ink"]
         tk.Label(
-            card,
-            textvariable=variable,
-            bg=COLORS["panel_alt"],
-            fg=COLORS["ink"],
-            font=("Segoe UI", 18, "bold"),
-            anchor="w",
-        ).pack(fill="x")
-        tk.Label(
-            card,
+            row,
             text=label,
-            bg=COLORS["panel_alt"],
-            fg=COLORS["muted"],
-            font=("Segoe UI", 9, "bold"),
+            bg=COLORS["panel_card"],
+            fg=label_fg,
+            font=("Segoe UI", 10, "bold"),
             anchor="w",
-        ).pack(fill="x", pady=(2, 0))
+        ).pack(side="left", fill="x", expand=True)
+        tk.Label(
+            row,
+            textvariable=variable,
+            bg=COLORS["panel_card"],
+            fg=COLORS["ink"],
+            font=("Segoe UI", 10, "bold"),
+            anchor="e",
+            justify="right",
+            wraplength=185,
+        ).pack(side="right")
 
     def _make_entry(self, parent: tk.Misc, variable: tk.StringVar, width: int = 12) -> tk.Entry:
         entry = tk.Entry(
@@ -1366,6 +1422,7 @@ class GoogleFormStudioApp:
             bg, fg = COLORS["teal_soft"], COLORS["ink"]
 
         self.status_var.set(text)
+        self.footer_status_var.set(text if text.endswith(".") else f"{text}.")
         self.status_box.configure(bg=bg)
         self.status_heading.configure(bg=bg, fg=fg)
         self.status_label.configure(bg=bg, fg=fg)
@@ -1388,6 +1445,11 @@ class GoogleFormStudioApp:
             self._write_logs("Aucune activite recente.")
             return
         self._write_logs("\n".join(core.format_log_entry(entry) for entry in entries))
+
+    def show_full_history(self) -> None:
+        entries = core.read_recent_logs(100)
+        content = "\n".join(core.format_log_entry(entry) for entry in entries) if entries else "Aucune activite recente."
+        self.show_report_dialog("Historique local", content)
 
     def clear_local_history(self) -> None:
         if not messagebox.askyesno(
@@ -1480,6 +1542,8 @@ class GoogleFormStudioApp:
             self.supported_questions_var.set("0")
             self.filled_answers_var.set("0")
             self.ready_status_var.set("Non")
+            self.form_title_var.set("-")
+            self.form_url_var.set("-")
             self.meta_var.set("Aucun formulaire charge.")
             self.set_status("Aucune question exploitable n'a ete detectee.", "warn")
             self._set_controls_enabled(False)
@@ -1499,6 +1563,8 @@ class GoogleFormStudioApp:
         )
 
         self.meta_var.set(f"{self.form_data['title']} | {total} question(s) | {supported} prises en charge")
+        self.form_title_var.set(str(self.form_data["title"]))
+        self.form_url_var.set(str(self.form_data["url_view"]))
         self.total_questions_var.set(str(total))
         self.supported_questions_var.set(str(supported))
         self._set_controls_enabled(True)
@@ -1519,6 +1585,8 @@ class GoogleFormStudioApp:
             self.supported_questions_var.set("0")
             self.filled_answers_var.set("0")
             self.ready_status_var.set("Non")
+            self.form_title_var.set("-")
+            self.form_url_var.set("-")
             return "Analyse un formulaire pour voir le recap ici."
 
         answers: dict[str, object] = {}
@@ -1826,6 +1894,8 @@ class GoogleFormStudioApp:
         ).pack(fill="x")
 
         self.meta_var.set("Aucun formulaire charge.")
+        self.form_title_var.set("-")
+        self.form_url_var.set("-")
         self.stats_var.set("0 question")
         self.total_questions_var.set("0")
         self.supported_questions_var.set("0")
