@@ -9,20 +9,20 @@ from version import APP_RELEASE, APP_VERSION
 
 
 COLORS = {
-    "bg": "#071827",
-    "panel": "#0B1F33",
-    "panel_alt": "#102A43",
-    "panel_card": "#0E263D",
-    "input": "#0A1A2C",
+    "bg": "#07111F",
+    "panel": "#0D1B2D",
+    "panel_alt": "#13243A",
+    "panel_card": "#10243A",
+    "input": "#081625",
     "ink": "#F4F8FC",
     "muted": "#9FB1C5",
-    "accent": "#36A3FF",
-    "accent_soft": "#17395C",
-    "teal": "#38D6C1",
-    "teal_soft": "#123F3F",
+    "accent": "#4EA8FF",
+    "accent_soft": "#153553",
+    "teal": "#45D6C0",
+    "teal_soft": "#123C3B",
     "gold": "#F2B84B",
     "gold_soft": "#3B3218",
-    "line": "#2B4865",
+    "line": "#26415E",
     "ok": "#57D68D",
     "ok_soft": "#173C2B",
     "warn": "#FF6969",
@@ -716,6 +716,10 @@ class GoogleFormStudioApp:
         self.stats_var = tk.StringVar(value="0 question")
         self.status_var = tk.StringVar(value="Pret pour analyser un formulaire public.")
         self.progress_var = tk.StringVar(value="Aucune serie en cours.")
+        self.total_questions_var = tk.StringVar(value="0")
+        self.supported_questions_var = tk.StringVar(value="0")
+        self.filled_answers_var = tk.StringVar(value="0")
+        self.ready_status_var = tk.StringVar(value="Non")
 
         self.auto_count_var = tk.StringVar(value="5")
         self.auto_min_delay_var = tk.StringVar(value="0.4")
@@ -751,7 +755,7 @@ class GoogleFormStudioApp:
     def _build_ui(self) -> None:
         self._configure_progress_style()
 
-        body = tk.Frame(self.root, bg=COLORS["bg"], padx=6, pady=6)
+        body = tk.Frame(self.root, bg=COLORS["bg"], padx=8, pady=8)
         body.pack(fill="both", expand=True)
 
         controls = tk.Frame(
@@ -759,11 +763,11 @@ class GoogleFormStudioApp:
             bg=COLORS["panel"],
             highlightbackground=COLORS["line"],
             highlightthickness=1,
-            padx=20,
-            pady=20,
-            width=340,
+            padx=18,
+            pady=18,
+            width=350,
         )
-        controls.pack(side="left", fill="y", padx=(0, 4))
+        controls.pack(side="left", fill="y", padx=(0, 8))
         controls.pack_propagate(False)
         controls_scroll = ScrollZone(controls, bg=COLORS["panel"], content_bg=COLORS["panel"])
         controls_scroll.pack(fill="both", expand=True)
@@ -775,24 +779,24 @@ class GoogleFormStudioApp:
             highlightbackground=COLORS["line"],
             highlightthickness=1,
             padx=20,
-            pady=20,
+            pady=18,
         )
-        canvas_panel.pack(side="left", fill="both", expand=True, padx=(0, 4))
+        canvas_panel.pack(side="left", fill="both", expand=True, padx=(0, 8))
 
         summary_panel = tk.Frame(
             body,
             bg=COLORS["panel"],
             highlightbackground=COLORS["line"],
             highlightthickness=1,
-            padx=20,
-            pady=20,
+            padx=18,
+            pady=18,
             width=390,
         )
         summary_panel.pack(side="right", fill="y")
         summary_panel.pack_propagate(False)
 
         brand = tk.Frame(controls_content, bg=COLORS["panel"])
-        brand.pack(fill="x", pady=(0, 18))
+        brand.pack(fill="x", pady=(0, 22))
         self.logo_image = None
         logo_path = core.ASSET_DIR / "app-icon.png"
         if logo_path.exists():
@@ -809,7 +813,7 @@ class GoogleFormStudioApp:
             text="Google Form",
             bg=COLORS["panel"],
             fg=COLORS["ink"],
-            font=("Segoe UI", 20, "bold"),
+            font=("Segoe UI", 19, "bold"),
             anchor="w",
         ).pack(fill="x")
         tk.Label(
@@ -817,18 +821,20 @@ class GoogleFormStudioApp:
             text="Studio",
             bg=COLORS["panel"],
             fg=COLORS["teal"],
-            font=("Segoe UI", 20, "bold"),
+            font=("Segoe UI", 19, "bold"),
             anchor="w",
         ).pack(fill="x")
 
         tk.Label(
-            controls_content,
-            text="1. Lien du Google Form",
+            title_box,
+            text=f"Version {APP_VERSION}",
             bg=COLORS["panel"],
-            fg=COLORS["ink"],
-            font=("Segoe UI", 11, "bold"),
+            fg=COLORS["muted"],
+            font=("Segoe UI", 9, "bold"),
             anchor="w",
-        ).pack(fill="x")
+        ).pack(fill="x", pady=(4, 0))
+
+        self._section_title(controls_content, "1. Lien du Google Form")
 
         self.url_entry = tk.Entry(
             controls_content,
@@ -854,7 +860,7 @@ class GoogleFormStudioApp:
         self.analyze_button.pack(fill="x", pady=(12, 16))
 
         self.status_box = tk.Frame(controls_content, bg=COLORS["teal_soft"], padx=12, pady=12)
-        self.status_box.pack(fill="x")
+        self.status_box.pack(fill="x", pady=(0, 14))
         self.status_heading = tk.Label(
             self.status_box,
             text="Etat",
@@ -885,18 +891,11 @@ class GoogleFormStudioApp:
             justify="left",
             wraplength=280,
             anchor="w",
-        ).pack(fill="x", pady=(16, 16))
+        ).pack(fill="x", pady=(0, 18))
 
         actions_box = tk.Frame(controls_content, bg=COLORS["panel"])
         actions_box.pack(fill="x")
-        tk.Label(
-            actions_box,
-            text="2. Actions rapides",
-            bg=COLORS["panel"],
-            fg=COLORS["ink"],
-            font=("Segoe UI", 11, "bold"),
-            anchor="w",
-        ).pack(fill="x", pady=(0, 8))
+        self._section_title(actions_box, "2. Actions rapides")
 
         self.random_button = self._make_button(
             actions_box,
@@ -934,14 +933,7 @@ class GoogleFormStudioApp:
         auto_box = tk.Frame(controls_content, bg=COLORS["panel"], padx=0, pady=0)
         auto_box.pack(fill="x", pady=(0, 16))
 
-        tk.Label(
-            auto_box,
-            text="3. Automatisation",
-            bg=COLORS["panel"],
-            fg=COLORS["ink"],
-            font=("Segoe UI", 11, "bold"),
-            anchor="w",
-        ).pack(fill="x", pady=(0, 8))
+        self._section_title(auto_box, "3. Automatisation")
 
         self._labeled_control(auto_box, "Nombre de reponses")
         self.auto_count_entry = self._make_entry(auto_box, self.auto_count_var)
@@ -999,31 +991,33 @@ class GoogleFormStudioApp:
         )
         self.auto_simulate_check.pack(fill="x", pady=(4, 10))
 
+        batch_buttons = tk.Frame(auto_box, bg=COLORS["panel"])
+        batch_buttons.pack(fill="x", pady=(0, 8))
         self.auto_button = self._make_button(
-            auto_box,
-            text="Lancer la serie",
+            batch_buttons,
+            text="Demarrer",
             bg=COLORS["ok_soft"],
             fg=COLORS["ink"],
             command=self.send_random_series,
         )
-        self.auto_button.pack(fill="x", pady=(0, 8))
+        self.auto_button.pack(side="left", fill="x", expand=True, padx=(0, 6))
 
         self.pause_button = self._make_button(
-            auto_box,
-            text="Mettre en pause",
+            batch_buttons,
+            text="Pause",
             bg=COLORS["gold_soft"],
             command=self.toggle_batch_pause,
         )
-        self.pause_button.pack(fill="x", pady=(0, 8))
+        self.pause_button.pack(side="left", fill="x", expand=True, padx=(0, 6))
 
         self.stop_button = self._make_button(
-            auto_box,
-            text="Arreter la serie",
+            batch_buttons,
+            text="Arreter",
             bg=COLORS["warn_soft"],
             fg=COLORS["ink"],
             command=self.request_stop_batch,
         )
-        self.stop_button.pack(fill="x")
+        self.stop_button.pack(side="left", fill="x", expand=True)
 
         progress_box = tk.Frame(auto_box, bg=COLORS["panel"])
         progress_box.pack(fill="x", pady=(12, 0))
@@ -1085,7 +1079,7 @@ class GoogleFormStudioApp:
         )
 
         tabs = tk.Frame(canvas_panel, bg=COLORS["panel"])
-        tabs.pack(fill="x", pady=(0, 12))
+        tabs.pack(fill="x", pady=(0, 14))
         tk.Label(
             tabs,
             text="Questions",
@@ -1106,35 +1100,35 @@ class GoogleFormStudioApp:
                 pady=10,
             ).pack(side="left")
 
+        header_line = tk.Frame(canvas_panel, bg=COLORS["panel"])
+        header_line.pack(fill="x", pady=(0, 10))
         tk.Label(
-            canvas_panel,
+            header_line,
             text="Remplissez ou generez les reponses ci-dessous",
             bg=COLORS["panel"],
             fg=COLORS["ink"],
-            font=("Segoe UI", 11),
+            font=("Segoe UI", 12, "bold"),
             anchor="w",
-        ).pack(fill="x")
-
-        self.scroll_zone = ScrollZone(canvas_panel, bg=COLORS["panel"], content_bg=COLORS["panel"])
-        self.scroll_zone.pack(fill="both", expand=True, pady=(14, 0))
-
+        ).pack(side="left", fill="x", expand=True)
         tk.Label(
-            summary_panel,
-            text="Recapitulatif",
-            bg=COLORS["panel"],
-            fg=COLORS["ink"],
-            font=("Segoe UI", 16, "bold"),
-            anchor="w",
-        ).pack(fill="x")
-
-        tk.Label(
-            summary_panel,
-            textvariable=self.stats_var,
+            header_line,
+            text=APP_RELEASE,
             bg=COLORS["panel"],
             fg=COLORS["muted"],
             font=("Segoe UI", 10, "bold"),
-            anchor="w",
-        ).pack(fill="x", pady=(4, 12))
+            anchor="e",
+        ).pack(side="right")
+
+        self.scroll_zone = ScrollZone(canvas_panel, bg=COLORS["panel"], content_bg=COLORS["panel"])
+        self.scroll_zone.pack(fill="both", expand=True)
+
+        self._panel_heading(summary_panel, "Recapitulatif", "Etat du formulaire et des reponses")
+        metrics = tk.Frame(summary_panel, bg=COLORS["panel"])
+        metrics.pack(fill="x", pady=(0, 14))
+        self._metric_card(metrics, "Questions", self.total_questions_var, 0, 0)
+        self._metric_card(metrics, "Exploitables", self.supported_questions_var, 0, 1)
+        self._metric_card(metrics, "Remplies", self.filled_answers_var, 1, 0)
+        self._metric_card(metrics, "Pret", self.ready_status_var, 1, 1)
 
         self.summary_text = tk.Text(
             summary_panel,
@@ -1146,18 +1140,11 @@ class GoogleFormStudioApp:
             padx=12,
             pady=12,
             state="disabled",
-            height=18,
+            height=14,
         )
-        self.summary_text.pack(fill="both", expand=True)
+        self.summary_text.pack(fill="both", expand=True, pady=(0, 14))
 
-        tk.Label(
-            summary_panel,
-            text="Journal recent",
-            bg=COLORS["panel"],
-            fg=COLORS["ink"],
-            font=("Segoe UI", 14, "bold"),
-            anchor="w",
-        ).pack(fill="x", pady=(16, 8))
+        self._panel_heading(summary_panel, "Activite locale", "Historique uniquement sur ce PC")
 
         self.log_text = tk.Text(
             summary_panel,
@@ -1181,12 +1168,68 @@ class GoogleFormStudioApp:
             pass
         style.configure(
             "Codex.Horizontal.TProgressbar",
-            troughcolor="white",
+            troughcolor=COLORS["input"],
             background=COLORS["teal"],
             bordercolor=COLORS["line"],
             lightcolor=COLORS["teal"],
             darkcolor=COLORS["teal"],
         )
+
+    def _section_title(self, parent: tk.Misc, text: str) -> None:
+        tk.Label(
+            parent,
+            text=text,
+            bg=str(parent.cget("bg")),
+            fg=COLORS["ink"],
+            font=("Segoe UI", 11, "bold"),
+            anchor="w",
+        ).pack(fill="x", pady=(0, 8))
+
+    def _panel_heading(self, parent: tk.Misc, title: str, subtitle: str) -> None:
+        tk.Label(
+            parent,
+            text=title,
+            bg=COLORS["panel"],
+            fg=COLORS["ink"],
+            font=("Segoe UI", 15, "bold"),
+            anchor="w",
+        ).pack(fill="x")
+        tk.Label(
+            parent,
+            text=subtitle,
+            bg=COLORS["panel"],
+            fg=COLORS["muted"],
+            font=("Segoe UI", 10),
+            anchor="w",
+        ).pack(fill="x", pady=(2, 12))
+
+    def _metric_card(self, parent: tk.Misc, label: str, variable: tk.StringVar, row: int, column: int) -> None:
+        card = tk.Frame(
+            parent,
+            bg=COLORS["panel_alt"],
+            highlightbackground=COLORS["line"],
+            highlightthickness=1,
+            padx=12,
+            pady=10,
+        )
+        card.grid(row=row, column=column, sticky="nsew", padx=(0 if column == 0 else 8, 0), pady=(0, 8))
+        parent.grid_columnconfigure(column, weight=1)
+        tk.Label(
+            card,
+            textvariable=variable,
+            bg=COLORS["panel_alt"],
+            fg=COLORS["ink"],
+            font=("Segoe UI", 18, "bold"),
+            anchor="w",
+        ).pack(fill="x")
+        tk.Label(
+            card,
+            text=label,
+            bg=COLORS["panel_alt"],
+            fg=COLORS["muted"],
+            font=("Segoe UI", 9, "bold"),
+            anchor="w",
+        ).pack(fill="x", pady=(2, 0))
 
     def _make_entry(self, parent: tk.Misc, variable: tk.StringVar, width: int = 12) -> tk.Entry:
         entry = tk.Entry(
@@ -1233,8 +1276,10 @@ class GoogleFormStudioApp:
             activeforeground=fg,
             font=("Segoe UI", 11, "bold"),
             padx=12,
-            pady=10,
+            pady=9,
             cursor="hand2",
+            highlightthickness=1,
+            highlightbackground=COLORS["line"],
         )
 
     def _clear_questions(self) -> None:
@@ -1274,7 +1319,7 @@ class GoogleFormStudioApp:
             self.batch_pause_event.clear()
             self.batch_is_paused = False
             self.batch_stop_requested = False
-            self.pause_button.configure(text="Mettre en pause")
+            self.pause_button.configure(text="Pause")
 
     def _format_batch_progress(self, snapshot: dict[str, object], *, stopped: bool = False) -> str:
         count = int(snapshot.get("count", snapshot.get("requested_count", 0)))
@@ -1431,6 +1476,10 @@ class GoogleFormStudioApp:
         if not self.form_data or not self.form_data["questions"]:
             self._write_summary("Aucune question exploitable n'a ete detectee.")
             self.stats_var.set("0 question")
+            self.total_questions_var.set("0")
+            self.supported_questions_var.set("0")
+            self.filled_answers_var.set("0")
+            self.ready_status_var.set("Non")
             self.meta_var.set("Aucun formulaire charge.")
             self.set_status("Aucune question exploitable n'a ete detectee.", "warn")
             self._set_controls_enabled(False)
@@ -1450,6 +1499,8 @@ class GoogleFormStudioApp:
         )
 
         self.meta_var.set(f"{self.form_data['title']} | {total} question(s) | {supported} prises en charge")
+        self.total_questions_var.set(str(total))
+        self.supported_questions_var.set(str(supported))
         self._set_controls_enabled(True)
         self.refresh_summary()
 
@@ -1464,6 +1515,10 @@ class GoogleFormStudioApp:
     def build_summary_text(self) -> str:
         if not self.cards:
             self.stats_var.set("0 question")
+            self.total_questions_var.set("0")
+            self.supported_questions_var.set("0")
+            self.filled_answers_var.set("0")
+            self.ready_status_var.set("Non")
             return "Analyse un formulaire pour voir le recap ici."
 
         answers: dict[str, object] = {}
@@ -1478,7 +1533,12 @@ class GoogleFormStudioApp:
             if answer != "__UNSUPPORTED__" and not core.is_blank_answer(answer):
                 ready_count += 1
 
+        supported_count = sum(1 for card in self.cards if card.question["supported"])
         self.stats_var.set(f"{len(self.cards)} question(s)  |  {ready_count} deja remplies")
+        self.total_questions_var.set(str(len(self.cards)))
+        self.supported_questions_var.set(str(supported_count))
+        self.filled_answers_var.set(str(ready_count))
+        self.ready_status_var.set("Oui" if supported_count > 0 and ready_count >= supported_count else "Non")
         return core.build_summary_text(questions, answers)
 
     def refresh_summary(self) -> None:
@@ -1604,12 +1664,12 @@ class GoogleFormStudioApp:
         if self.batch_pause_event.is_set():
             self.batch_pause_event.clear()
             self.batch_is_paused = False
-            self.pause_button.configure(text="Mettre en pause")
+            self.pause_button.configure(text="Pause")
             self.set_status("Serie automatique reprise.", "busy")
         else:
             self.batch_pause_event.set()
             self.batch_is_paused = True
-            self.pause_button.configure(text="Reprendre la serie")
+            self.pause_button.configure(text="Reprendre")
             self.set_status("Serie automatique en pause.", "warn")
 
         self._render_batch_progress()
@@ -1671,7 +1731,7 @@ class GoogleFormStudioApp:
             "retry_count_total": 0,
             "eta_seconds": None,
         }
-        self.pause_button.configure(text="Mettre en pause")
+        self.pause_button.configure(text="Pause")
         self._render_batch_progress()
         self.set_status("Serie automatique en cours...", "busy")
         self._write_summary(core.build_summary_text(self.form_data["questions"], sample_answers))
@@ -1759,7 +1819,7 @@ class GoogleFormStudioApp:
         tk.Label(
             self.scroll_zone.content,
             text="Analyse un formulaire pour afficher ici les cartes de questions.",
-            bg=COLORS["bg"],
+            bg=COLORS["panel"],
             fg=COLORS["muted"],
             font=("Segoe UI", 13, "bold"),
             pady=40,
@@ -1767,6 +1827,10 @@ class GoogleFormStudioApp:
 
         self.meta_var.set("Aucun formulaire charge.")
         self.stats_var.set("0 question")
+        self.total_questions_var.set("0")
+        self.supported_questions_var.set("0")
+        self.filled_answers_var.set("0")
+        self.ready_status_var.set("Non")
         self.progress_var.set("Aucune serie en cours.")
         self.progress_bar["value"] = 0
         self._write_summary("Analyse un formulaire pour voir le recap ici.")
