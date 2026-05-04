@@ -1,0 +1,3 @@
+APP_NAME = "Google Form Studio"
+APP_VERSION = "1.0.0"
+APP_RELEASE = f"{APP_NAME} v{APP_VERSION}"

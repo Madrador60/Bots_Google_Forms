@@ -5,25 +5,26 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 import Bot_GoogleForm_Intelligent as core
+from version import APP_RELEASE, APP_VERSION
 
 
 COLORS = {
-    "bg": "#F6F1E7",
-    "panel": "#FFF8EE",
-    "panel_alt": "#FBE7D6",
-    "ink": "#183153",
-    "muted": "#52647A",
+    "bg": "#F4F7FB",
+    "panel": "#FFFFFF",
+    "panel_alt": "#EEF6F8",
+    "ink": "#102033",
+    "muted": "#5C6B7A",
     "accent": "#E76F51",
-    "accent_soft": "#F4C8B8",
-    "teal": "#2A9D8F",
-    "teal_soft": "#CBEDE7",
-    "gold": "#F4A261",
-    "gold_soft": "#F9DFC0",
-    "line": "#E1D3BF",
-    "ok": "#2D6A4F",
-    "ok_soft": "#D8F0E3",
-    "warn": "#A44A3F",
-    "warn_soft": "#F8D7D1",
+    "accent_soft": "#FCE4DC",
+    "teal": "#168A80",
+    "teal_soft": "#DDF3F0",
+    "gold": "#F2B84B",
+    "gold_soft": "#FFF1CC",
+    "line": "#D8E1EA",
+    "ok": "#226A4A",
+    "ok_soft": "#DEF5E9",
+    "warn": "#A23C3C",
+    "warn_soft": "#FBE2E2",
 }
 
 
@@ -688,9 +689,10 @@ class QuestionCard:
 class GoogleFormStudioApp:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("Google Form Studio")
+        self.root.title(APP_RELEASE)
         self.root.configure(bg=COLORS["bg"])
         self._configure_window()
+        self._configure_icon()
 
         self.form_data: dict[str, object] | None = None
         self.cards: list[QuestionCard] = []
@@ -732,6 +734,14 @@ class GoogleFormStudioApp:
         self.root.geometry(f"{width}x{height}+{offset_x}+{offset_y}")
         self.root.minsize(min(width, 960), min(height, 680))
 
+    def _configure_icon(self) -> None:
+        icon_path = core.ASSET_DIR / "app-icon.ico"
+        if icon_path.exists():
+            try:
+                self.root.iconbitmap(str(icon_path))
+            except tk.TclError:
+                pass
+
     def _build_ui(self) -> None:
         self._configure_progress_style()
 
@@ -740,7 +750,7 @@ class GoogleFormStudioApp:
 
         tk.Label(
             header,
-            text="Google Form Studio",
+            text=APP_RELEASE,
             bg=COLORS["bg"],
             fg=COLORS["ink"],
             font=("Segoe UI", 28, "bold"),
@@ -749,7 +759,7 @@ class GoogleFormStudioApp:
 
         tk.Label(
             header,
-            text="Analyse, simulation, remplissage intelligent et envoi progressif de Google Forms publics.",
+            text="Interface Windows pour analyser, simuler et automatiser des Google Forms publics.",
             bg=COLORS["bg"],
             fg=COLORS["muted"],
             font=("Segoe UI", 12),

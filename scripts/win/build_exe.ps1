@@ -2,7 +2,9 @@ $ErrorActionPreference = "Stop"
 
 $rootDir = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 $appDir = Join-Path $rootDir "app"
+$assetDir = Join-Path $rootDir "assets"
 $entryPoint = Join-Path $appDir "Interface_GoogleForm_Studio.py"
+$iconPath = Join-Path $assetDir "app-icon.ico"
 $distDir = Join-Path $rootDir "dist"
 $buildDir = Join-Path $rootDir "build"
 
@@ -49,6 +51,8 @@ $exitCode = Invoke-Python -m PyInstaller `
     --onefile `
     --windowed `
     --name "GoogleFormStudio" `
+    --icon $iconPath `
+    --add-data "$assetDir;assets" `
     --paths $appDir `
     --distpath $distDir `
     --workpath $buildDir `

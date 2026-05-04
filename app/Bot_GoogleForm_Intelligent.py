@@ -14,6 +14,8 @@ from typing import Any, Callable
 
 import requests
 
+from version import APP_RELEASE, APP_VERSION
+
 
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -22,7 +24,10 @@ USER_AGENT = (
 )
 REQUEST_TIMEOUT = 20
 APP_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else APP_DIR.parent
+IS_FROZEN = bool(getattr(sys, "frozen", False))
+BUNDLE_DIR = Path(getattr(sys, "_MEIPASS", APP_DIR))
+PROJECT_DIR = Path(sys.executable).resolve().parent if IS_FROZEN else APP_DIR.parent
+ASSET_DIR = BUNDLE_DIR / "assets" if IS_FROZEN else PROJECT_DIR / "assets"
 RUNTIME_DIR = PROJECT_DIR / "runtime"
 LOG_DIR = PROJECT_DIR / "logs"
 LOG_FILE = LOG_DIR / "activity.jsonl"
@@ -1560,7 +1565,7 @@ def ask_restart_or_close() -> str:
 def main() -> int:
     while True:
         print_separator()
-        print("Assistant Google Forms")
+        print(APP_RELEASE)
         print("Collez l'URL d'un formulaire public, puis utilisez le mode manuel ou automatique.")
         print_separator()
 
