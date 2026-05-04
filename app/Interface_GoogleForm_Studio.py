@@ -9,22 +9,25 @@ from version import APP_RELEASE, APP_VERSION
 
 
 COLORS = {
-    "bg": "#F4F7FB",
-    "panel": "#FFFFFF",
-    "panel_alt": "#EEF6F8",
-    "ink": "#102033",
-    "muted": "#5C6B7A",
-    "accent": "#E76F51",
-    "accent_soft": "#FCE4DC",
-    "teal": "#168A80",
-    "teal_soft": "#DDF3F0",
+    "bg": "#071827",
+    "panel": "#0B1F33",
+    "panel_alt": "#102A43",
+    "panel_card": "#0E263D",
+    "input": "#0A1A2C",
+    "ink": "#F4F8FC",
+    "muted": "#9FB1C5",
+    "accent": "#36A3FF",
+    "accent_soft": "#17395C",
+    "teal": "#38D6C1",
+    "teal_soft": "#123F3F",
     "gold": "#F2B84B",
-    "gold_soft": "#FFF1CC",
-    "line": "#D8E1EA",
-    "ok": "#226A4A",
-    "ok_soft": "#DEF5E9",
-    "warn": "#A23C3C",
-    "warn_soft": "#FBE2E2",
+    "gold_soft": "#3B3218",
+    "line": "#2B4865",
+    "ok": "#57D68D",
+    "ok_soft": "#173C2B",
+    "warn": "#FF6969",
+    "warn_soft": "#40202A",
+    "purple": "#A970FF",
 }
 
 
@@ -109,7 +112,7 @@ class QuestionCard:
         self.primary_input: tk.Widget | None = None
         self.error_var = tk.StringVar(value="")
 
-        card_bg = COLORS["panel"] if index % 2 else COLORS["panel_alt"]
+        card_bg = COLORS["panel_card"]
         self.card_bg = card_bg
         self.frame = tk.Frame(
             parent,
@@ -126,36 +129,39 @@ class QuestionCard:
 
         tk.Label(
             header,
-            text=f"Question {index}",
-            bg=card_bg,
-            fg=COLORS["teal"],
+            text=str(index),
+            bg=COLORS["teal"],
+            fg=COLORS["bg"],
+            width=3,
+            padx=6,
+            pady=6,
             font=("Segoe UI", 11, "bold"),
-        ).pack(side="left")
+        ).pack(side="left", padx=(0, 12))
 
-        badge_text = str(question["type_label"])
+        title = str(question["text"])
         if question["required"]:
-            badge_text += "  |  obligatoire"
-        tk.Label(
-            header,
-            text=badge_text,
-            bg=COLORS["gold_soft"],
-            fg=COLORS["ink"],
-            padx=10,
-            pady=4,
-            font=("Segoe UI", 10, "bold"),
-        ).pack(side="right")
+            title += " *"
 
         self.prompt_label = tk.Label(
-            self.frame,
-            text=str(question["text"]),
+            header,
+            text=title,
             bg=card_bg,
             fg=COLORS["ink"],
-            font=("Segoe UI", 14, "bold"),
+            font=("Segoe UI", 12, "bold"),
             wraplength=620,
             justify="left",
             anchor="w",
         )
-        self.prompt_label.pack(fill="x", pady=(12, 6))
+        self.prompt_label.pack(side="left", fill="x", expand=True)
+
+        tk.Label(
+            self.frame,
+            text=str(question["type_label"]),
+            bg=card_bg,
+            fg=COLORS["muted"],
+            font=("Segoe UI", 10),
+            anchor="w",
+        ).pack(fill="x", padx=(54, 0), pady=(2, 6))
 
         self.answer_var: tk.StringVar | None = None
         self.text_widget: tk.Text | None = None
@@ -230,7 +236,7 @@ class QuestionCard:
             parent,
             width=width,
             relief="flat",
-            bg="white",
+            bg=COLORS["input"],
             fg=COLORS["ink"],
             insertbackground=COLORS["ink"],
             font=("Segoe UI", 12),
@@ -280,7 +286,7 @@ class QuestionCard:
                 selectcolor=COLORS["accent"],
                 offrelief="flat",
                 overrelief="flat",
-                bg=COLORS["panel"],
+                bg=COLORS["input"],
                 activebackground=COLORS["accent_soft"],
                 activeforeground=COLORS["ink"],
                 fg=COLORS["ink"],
@@ -328,13 +334,13 @@ class QuestionCard:
             return
 
         if question_type == 1:
-            box = tk.Frame(self.frame, bg="white", highlightbackground=COLORS["line"], highlightthickness=1)
+            box = tk.Frame(self.frame, bg=COLORS["input"], highlightbackground=COLORS["line"], highlightthickness=1)
             box.pack(fill="x", pady=(8, 0))
             text = tk.Text(
                 box,
                 height=4,
                 relief="flat",
-                bg="white",
+                bg=COLORS["input"],
                 fg=COLORS["ink"],
                 insertbackground=COLORS["ink"],
                 font=("Segoe UI", 12),
@@ -374,7 +380,7 @@ class QuestionCard:
                     relief="flat",
                     offrelief="flat",
                     overrelief="flat",
-                    bg=COLORS["panel"],
+                    bg=COLORS["input"],
                     activebackground=COLORS["accent_soft"],
                     activeforeground=COLORS["ink"],
                     fg=COLORS["ink"],
@@ -452,7 +458,7 @@ class QuestionCard:
                         relief="flat",
                         offrelief="flat",
                         overrelief="flat",
-                        bg=COLORS["panel"],
+                        bg=COLORS["input"],
                         activebackground=COLORS["accent_soft"],
                         activeforeground=COLORS["ink"],
                         fg=COLORS["ink"],
@@ -745,28 +751,7 @@ class GoogleFormStudioApp:
     def _build_ui(self) -> None:
         self._configure_progress_style()
 
-        header = tk.Frame(self.root, bg=COLORS["bg"], padx=28, pady=24)
-        header.pack(fill="x")
-
-        tk.Label(
-            header,
-            text=APP_RELEASE,
-            bg=COLORS["bg"],
-            fg=COLORS["ink"],
-            font=("Segoe UI", 28, "bold"),
-            anchor="w",
-        ).pack(fill="x")
-
-        tk.Label(
-            header,
-            text="Interface Windows pour analyser, simuler et automatiser des Google Forms publics.",
-            bg=COLORS["bg"],
-            fg=COLORS["muted"],
-            font=("Segoe UI", 12),
-            anchor="w",
-        ).pack(fill="x", pady=(6, 0))
-
-        body = tk.Frame(self.root, bg=COLORS["bg"], padx=24)
+        body = tk.Frame(self.root, bg=COLORS["bg"], padx=6, pady=6)
         body.pack(fill="both", expand=True)
 
         controls = tk.Frame(
@@ -778,7 +763,7 @@ class GoogleFormStudioApp:
             pady=20,
             width=340,
         )
-        controls.pack(side="left", fill="y", padx=(0, 18))
+        controls.pack(side="left", fill="y", padx=(0, 4))
         controls.pack_propagate(False)
         controls_scroll = ScrollZone(controls, bg=COLORS["panel"], content_bg=COLORS["panel"])
         controls_scroll.pack(fill="both", expand=True)
@@ -792,7 +777,7 @@ class GoogleFormStudioApp:
             padx=20,
             pady=20,
         )
-        canvas_panel.pack(side="left", fill="both", expand=True, padx=(0, 18))
+        canvas_panel.pack(side="left", fill="both", expand=True, padx=(0, 4))
 
         summary_panel = tk.Frame(
             body,
@@ -806,31 +791,50 @@ class GoogleFormStudioApp:
         summary_panel.pack(side="right", fill="y")
         summary_panel.pack_propagate(False)
 
+        brand = tk.Frame(controls_content, bg=COLORS["panel"])
+        brand.pack(fill="x", pady=(0, 18))
+        self.logo_image = None
+        logo_path = core.ASSET_DIR / "app-icon.png"
+        if logo_path.exists():
+            try:
+                self.logo_image = tk.PhotoImage(file=str(logo_path)).subsample(4, 4)
+                tk.Label(brand, image=self.logo_image, bg=COLORS["panel"]).pack(side="left", padx=(0, 12))
+            except tk.TclError:
+                self.logo_image = None
+
+        title_box = tk.Frame(brand, bg=COLORS["panel"])
+        title_box.pack(side="left", fill="x", expand=True)
         tk.Label(
-            controls_content,
-            text="Lien du formulaire",
+            title_box,
+            text="Google Form",
             bg=COLORS["panel"],
             fg=COLORS["ink"],
-            font=("Segoe UI", 14, "bold"),
+            font=("Segoe UI", 20, "bold"),
+            anchor="w",
+        ).pack(fill="x")
+        tk.Label(
+            title_box,
+            text="Studio",
+            bg=COLORS["panel"],
+            fg=COLORS["teal"],
+            font=("Segoe UI", 20, "bold"),
             anchor="w",
         ).pack(fill="x")
 
         tk.Label(
             controls_content,
-            text="Colle l'URL, lance l'analyse, puis remplis ou simule les cartes.",
+            text="1. Lien du Google Form",
             bg=COLORS["panel"],
-            fg=COLORS["muted"],
-            font=("Segoe UI", 10),
-            justify="left",
-            wraplength=280,
+            fg=COLORS["ink"],
+            font=("Segoe UI", 11, "bold"),
             anchor="w",
-        ).pack(fill="x", pady=(4, 12))
+        ).pack(fill="x")
 
         self.url_entry = tk.Entry(
             controls_content,
             textvariable=self.url_var,
             relief="flat",
-            bg="white",
+            bg=COLORS["input"],
             fg=COLORS["ink"],
             insertbackground=COLORS["ink"],
             font=("Segoe UI", 12),
@@ -842,8 +846,9 @@ class GoogleFormStudioApp:
 
         self.analyze_button = self._make_button(
             controls_content,
-            text="Analyser",
+            text="Analyser le formulaire",
             bg=COLORS["teal"],
+            fg=COLORS["bg"],
             command=self.analyze_form,
         )
         self.analyze_button.pack(fill="x", pady=(12, 16))
@@ -884,21 +889,27 @@ class GoogleFormStudioApp:
 
         actions_box = tk.Frame(controls_content, bg=COLORS["panel"])
         actions_box.pack(fill="x")
+        tk.Label(
+            actions_box,
+            text="2. Actions rapides",
+            bg=COLORS["panel"],
+            fg=COLORS["ink"],
+            font=("Segoe UI", 11, "bold"),
+            anchor="w",
+        ).pack(fill="x", pady=(0, 8))
 
         self.random_button = self._make_button(
             actions_box,
-            text="Remplir au hasard",
-            bg=COLORS["gold"],
-            fg=COLORS["ink"],
+            text="Generer les reponses (IA)",
+            bg=COLORS["accent_soft"],
             command=self.fill_random_answers,
         )
         self.random_button.pack(fill="x", pady=(0, 10))
 
         self.clear_button = self._make_button(
             actions_box,
-            text="Vider les champs",
-            bg=COLORS["gold_soft"],
-            fg=COLORS["ink"],
+            text="Vider les reponses",
+            bg=COLORS["panel_alt"],
             command=self.clear_answers,
         )
         self.clear_button.pack(fill="x", pady=(0, 10))
@@ -907,7 +918,6 @@ class GoogleFormStudioApp:
             actions_box,
             text="Simuler sans envoyer",
             bg=COLORS["accent_soft"],
-            fg=COLORS["ink"],
             command=self.simulate_current_answers,
         )
         self.simulate_button.pack(fill="x", pady=(0, 10))
@@ -915,22 +925,23 @@ class GoogleFormStudioApp:
         self.submit_button = self._make_button(
             actions_box,
             text="Envoyer la reponse",
-            bg=COLORS["accent"],
+            bg=COLORS["ok_soft"],
+            fg=COLORS["ink"],
             command=self.submit_answers,
         )
         self.submit_button.pack(fill="x", pady=(0, 16))
 
-        auto_box = tk.Frame(controls_content, bg=COLORS["panel_alt"], padx=12, pady=12)
+        auto_box = tk.Frame(controls_content, bg=COLORS["panel"], padx=0, pady=0)
         auto_box.pack(fill="x", pady=(0, 16))
 
         tk.Label(
             auto_box,
-            text="Serie automatique",
-            bg=COLORS["panel_alt"],
+            text="3. Automatisation",
+            bg=COLORS["panel"],
             fg=COLORS["ink"],
-            font=("Segoe UI", 12, "bold"),
+            font=("Segoe UI", 11, "bold"),
             anchor="w",
-        ).pack(fill="x")
+        ).pack(fill="x", pady=(0, 8))
 
         self._labeled_control(auto_box, "Nombre de reponses")
         self.auto_count_entry = self._make_entry(auto_box, self.auto_count_var)
@@ -940,29 +951,29 @@ class GoogleFormStudioApp:
         profile_menu = tk.OptionMenu(auto_box, self.auto_profile_var, *core.AUTO_PROFILES)
         profile_menu.configure(
             relief="flat",
-            bg="white",
+            bg=COLORS["input"],
             fg=COLORS["ink"],
-            activebackground="white",
+            activebackground=COLORS["input"],
             activeforeground=COLORS["ink"],
             highlightthickness=1,
             highlightbackground=COLORS["line"],
             font=("Segoe UI", 11),
         )
-        profile_menu["menu"].configure(bg="white", fg=COLORS["ink"], font=("Segoe UI", 11))
+        profile_menu["menu"].configure(bg=COLORS["input"], fg=COLORS["ink"], font=("Segoe UI", 11))
         profile_menu.pack(fill="x", pady=(4, 8))
         self.auto_profile_menu = profile_menu
 
-        delays_row = tk.Frame(auto_box, bg=COLORS["panel_alt"])
+        delays_row = tk.Frame(auto_box, bg=COLORS["panel"])
         delays_row.pack(fill="x", pady=(0, 8))
         tk.Label(
             delays_row,
             text="Delais min / max (s)",
-            bg=COLORS["panel_alt"],
+            bg=COLORS["panel"],
             fg=COLORS["muted"],
             font=("Segoe UI", 10),
             anchor="w",
         ).pack(fill="x")
-        delay_inputs = tk.Frame(delays_row, bg=COLORS["panel_alt"])
+        delay_inputs = tk.Frame(delays_row, bg=COLORS["panel"])
         delay_inputs.pack(fill="x", pady=(4, 0))
         self.auto_min_delay_entry = self._make_entry(delay_inputs, self.auto_min_delay_var, width=8)
         self.auto_min_delay_entry.pack(side="left", fill="x", expand=True, padx=(0, 6))
@@ -977,11 +988,11 @@ class GoogleFormStudioApp:
             auto_box,
             text="Simulation uniquement",
             variable=self.auto_simulate_var,
-            bg=COLORS["panel_alt"],
+            bg=COLORS["panel"],
             fg=COLORS["ink"],
-            activebackground=COLORS["panel_alt"],
+            activebackground=COLORS["panel"],
             activeforeground=COLORS["ink"],
-            selectcolor=COLORS["panel"],
+            selectcolor=COLORS["input"],
             font=("Segoe UI", 10, "bold"),
             anchor="w",
             relief="flat",
@@ -991,7 +1002,8 @@ class GoogleFormStudioApp:
         self.auto_button = self._make_button(
             auto_box,
             text="Lancer la serie",
-            bg=COLORS["teal"],
+            bg=COLORS["ok_soft"],
+            fg=COLORS["ink"],
             command=self.send_random_series,
         )
         self.auto_button.pack(fill="x", pady=(0, 8))
@@ -1000,7 +1012,6 @@ class GoogleFormStudioApp:
             auto_box,
             text="Mettre en pause",
             bg=COLORS["gold_soft"],
-            fg=COLORS["ink"],
             command=self.toggle_batch_pause,
         )
         self.pause_button.pack(fill="x", pady=(0, 8))
@@ -1009,17 +1020,17 @@ class GoogleFormStudioApp:
             auto_box,
             text="Arreter la serie",
             bg=COLORS["warn_soft"],
-            fg=COLORS["warn"],
+            fg=COLORS["ink"],
             command=self.request_stop_batch,
         )
         self.stop_button.pack(fill="x")
 
-        progress_box = tk.Frame(auto_box, bg=COLORS["panel_alt"])
+        progress_box = tk.Frame(auto_box, bg=COLORS["panel"])
         progress_box.pack(fill="x", pady=(12, 0))
         tk.Label(
             progress_box,
             textvariable=self.progress_var,
-            bg=COLORS["panel_alt"],
+            bg=COLORS["panel"],
             fg=COLORS["muted"],
             font=("Segoe UI", 10, "bold"),
             wraplength=280,
@@ -1035,9 +1046,8 @@ class GoogleFormStudioApp:
 
         self.refresh_logs_button = self._make_button(
             footer_box,
-            text="Rafraichir le journal",
-            bg=COLORS["gold_soft"],
-            fg=COLORS["ink"],
+            text="Actualiser l'historique",
+            bg=COLORS["panel_alt"],
             command=self.refresh_logs,
         )
         self.refresh_logs_button.pack(fill="x", pady=(0, 10))
@@ -1045,28 +1055,18 @@ class GoogleFormStudioApp:
         self.clear_history_button = self._make_button(
             footer_box,
             text="Effacer l'historique local",
-            bg=COLORS["warn_soft"],
-            fg=COLORS["warn"],
+            bg=COLORS["panel_alt"],
             command=self.clear_local_history,
         )
         self.clear_history_button.pack(fill="x", pady=(0, 10))
 
         self.reset_button = self._make_button(
             footer_box,
-            text="Recommencer",
+            text="Reinitialiser",
             bg=COLORS["panel_alt"],
-            fg=COLORS["ink"],
             command=self.reset_form,
         )
         self.reset_button.pack(fill="x", pady=(0, 10))
-
-        self.close_button = self._make_button(
-            footer_box,
-            text="Fermer",
-            bg=COLORS["ink"],
-            command=self.root.destroy,
-        )
-        self.close_button.pack(fill="x")
 
         self.controlled_widgets.extend(
             [
@@ -1084,17 +1084,39 @@ class GoogleFormStudioApp:
             ]
         )
 
+        tabs = tk.Frame(canvas_panel, bg=COLORS["panel"])
+        tabs.pack(fill="x", pady=(0, 12))
+        tk.Label(
+            tabs,
+            text="Questions",
+            bg=COLORS["accent_soft"],
+            fg=COLORS["teal"],
+            font=("Segoe UI", 11, "bold"),
+            padx=22,
+            pady=10,
+        ).pack(side="left", padx=(0, 12))
+        for tab_name in ("Simulation", "Reponse brute (JSON)"):
+            tk.Label(
+                tabs,
+                text=tab_name,
+                bg=COLORS["panel"],
+                fg=COLORS["muted"],
+                font=("Segoe UI", 11),
+                padx=22,
+                pady=10,
+            ).pack(side="left")
+
         tk.Label(
             canvas_panel,
-            text="Questions",
+            text="Remplissez ou generez les reponses ci-dessous",
             bg=COLORS["panel"],
             fg=COLORS["ink"],
-            font=("Segoe UI", 16, "bold"),
+            font=("Segoe UI", 11),
             anchor="w",
         ).pack(fill="x")
 
-        self.scroll_zone = ScrollZone(canvas_panel)
-        self.scroll_zone.pack(fill="both", expand=True, pady=(16, 0))
+        self.scroll_zone = ScrollZone(canvas_panel, bg=COLORS["panel"], content_bg=COLORS["panel"])
+        self.scroll_zone.pack(fill="both", expand=True, pady=(14, 0))
 
         tk.Label(
             summary_panel,
@@ -1117,7 +1139,7 @@ class GoogleFormStudioApp:
         self.summary_text = tk.Text(
             summary_panel,
             relief="flat",
-            bg="white",
+            bg=COLORS["input"],
             fg=COLORS["ink"],
             font=("Segoe UI", 11),
             wrap="word",
@@ -1140,7 +1162,7 @@ class GoogleFormStudioApp:
         self.log_text = tk.Text(
             summary_panel,
             relief="flat",
-            bg="white",
+            bg=COLORS["input"],
             fg=COLORS["ink"],
             font=("Segoe UI", 10),
             wrap="word",
@@ -1172,7 +1194,7 @@ class GoogleFormStudioApp:
             textvariable=variable,
             width=width,
             relief="flat",
-            bg="white",
+            bg=COLORS["input"],
             fg=COLORS["ink"],
             insertbackground=COLORS["ink"],
             font=("Segoe UI", 12),
@@ -1347,7 +1369,7 @@ class GoogleFormStudioApp:
         text = tk.Text(
             dialog,
             relief="flat",
-            bg="white",
+            bg=COLORS["input"],
             fg=COLORS["ink"],
             font=("Menlo", 11),
             wrap="word",
